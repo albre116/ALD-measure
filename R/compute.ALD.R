@@ -1,3 +1,7 @@
+
+
+
+
 compute.ALD <-
 function(dat, tolerance=.005)
 {
