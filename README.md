@@ -13,7 +13,7 @@ For multiallelic loci, standard measures of linkage disequilibrium provide an in
 You can install **asymLD** package using the **devtools** package as follows:
 
 ```S
-devtools::install_github("https://github.com/albre116/ALD-measure.git")
+devtools::install_github("vpaunic/ALD-measure"))
 ```
 
 ### Usage
