@@ -62,7 +62,8 @@
 #' # conditional on HLA*DPB1 than for HLA*DPB1 conditional on HLA*DPA1, indicating 
 #' # that the overall variation for DPA1 is relatively low given specific DPB1 alleles
 #' 
-#' # An example using SNP data where results are symmetric and equal to the ordinary correlation measure (r)
+#' # An example using SNP data where results are symmetric and equal to the ordinary 
+#' correlation measure (r)
 #' data(snp.freqs)
 #' snps <- c("rs1548306", "rs6923504", "rs4434496", "rs7766854")
 #' compute.ALD(snp.freqs[snp.freqs$locus1==snps[2] & snp.freqs$locus2==snps[3],])

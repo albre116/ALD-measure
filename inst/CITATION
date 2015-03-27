@@ -14,7 +14,7 @@ citEntry(entry = "Article",
   textVersion  =
   paste("Glenys Thomson, Richard M. Single (2014).",
         "Conditional Asymmetric Linkage Disequilibrium (ALD): Extending the Biallelic r2 Measure.",
-        “Genetics, 198(1), 321-331.”,
+        "Genetics, 198(1), 321-331.",
         "URL http://www.genetics.org/content/198/1/321")
 )
 
