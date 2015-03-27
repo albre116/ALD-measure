@@ -14,7 +14,7 @@
 #' \item{\code{allele2}}{a character vector}
 #' }
 #' 
-#' @name hal.freqs
+#' @name hla.freqs
 #' @docType data
 #' @source Wilson, C., 2010 Identifying polymorphisms associated with risk for the development of myopericarditis following smallpox vaccine. The Immunology Database and Analysis Portal (ImmPort), Study #26.
 #' 
