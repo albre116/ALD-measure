@@ -15,6 +15,7 @@
 #' @aliases asymLD
 #' @section asymLD functions:
 #' The function compute.ALD() calculates asymmetric LD for haplotype frequency data.
+#' The function compute.AShomz() calculates allele specific homozygosity values for haplotype frequency data.
 #'
 #' @docType package
 #' @name asymLD-package
