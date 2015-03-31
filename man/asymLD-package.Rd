@@ -21,6 +21,7 @@ These measures are identical to the correlation measure (r) for bi-allelic data.
 \section{asymLD functions}{
 
 The function compute.ALD() calculates asymmetric LD for haplotype frequency data.
+The function compute.AShomz() calculates allele specific homozygosity values for haplotype frequency data.
 }
 \references{
 Thomson G, Single RM. Conditional Asymmetric Linkage Disequilibrium (ALD): Extending the Bi-Allelic r^2 Measure. Genetics. 2014  198(1):321-331. PMID:25023400
