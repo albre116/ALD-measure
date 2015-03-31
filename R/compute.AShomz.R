@@ -13,9 +13,11 @@
 #'            \code{allele1} \tab A character vector indentifying the allele at locus 1.\cr
 #'            \code{allele2} \tab A character vector indentifying the allele at locus 1.\cr
 #'            }
-#' @param tolerance A threshold for the sum of the haplotype frequencies.
+#' @param tolerance	A threshold for the sum of the haplotype frequencies.
 #'    If the sum of the haplotype frequencies is greater than 1+tolerance or less
 #'    than 1-tolerance an error is returned.
+#' @param sort.var	a vector of variable names specifying the "sort by" variables. The default is c("focal","allele").
+#' @param sort.asc	a vector of TRUE/FALSE values, with the same length as "sort.var", indicating whether sorting of each variable is in ascending order. The default order is ascending.
 #'
 #' @return The return value is a dataframe with the following components:
 #'  \tabular{ll}{
