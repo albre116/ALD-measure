@@ -57,7 +57,7 @@ shinyServer(function(input, output) {
   })
   
   
-  # --------- HELPER FUNCTIONS --------------
+  # -------------------------- HELPER FUNCTIONS -------------------------------
   
   # ---------------------------------------------------------------------------
   # Get the frequency data for two loci from the frequency file and format it 
