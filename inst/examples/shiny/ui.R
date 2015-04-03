@@ -14,7 +14,7 @@ shinyUI(fluidPage(
         c(Comma=',',
           Semicolon=';',
           Tab='\t'),
-        '\t')
+        ',')
     ),
 
     mainPanel(
