@@ -1,4 +1,5 @@
 library(shiny)
+library(asymLD)
 
 shinyServer(function(input, output) {
  
@@ -33,6 +34,7 @@ shinyServer(function(input, output) {
       return(NULL)
     
     data <- read.csv(inFile$datapath, header=input$header, sep=input$sep)
+    data <- data[data[, dim(data)[2]] != 0, ] # remove freq == 0 rows 
     pop.use <- names(data)[dim(data)[2]]
     nloci <- dim(data)[2]-1
     loci <- names(data)[1:nloci]
@@ -47,9 +49,8 @@ shinyServer(function(input, output) {
     
     # prepare the data for plotting function
     ald.allpairs$pop <- pop.use
-    map.order <- loci
     ld.matrix.plot.2vars(dat=ald.allpairs, pop.name=pop.use,
-      ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=map.order,
+      ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci,
       ld.labnames=c("ALD","ALD"), bw=T, xlab.shift=1, ylab.shift=-0, values=T)
     title(sub=paste(pop.use,": Asymmetric LD\n row gene conditional on
       column gene",sep=""),font.sub=2,cex.sub=1.2)
@@ -64,9 +65,9 @@ shinyServer(function(input, output) {
   # for the compute.ALD() function.
   # ---------------------------------------------------------------------------
   get_bilocus_data <- function(data, i, j){
+    nloci <- dim(data)[2]-1
+    loci <- names(data)[1:nloci]
     data.2 <- data[,c(i, j, nloci+1)]
-    # remove freq == 0 rows 
-    data.2 <- data.2[data.2[, 3] != 0, ]
     data.2$pair <- paste(data.2[, 1], data.2[, 2], sep='-')
     aggregate.freqs <- by(data.2, data.2$pair, function(x) sum(x[, 3]))
     allele_combos <- names(aggregate.freqs)
@@ -83,6 +84,7 @@ shinyServer(function(input, output) {
   # ---------------------------------------------------------------------------
   # Function for plotting the ALD heatmap
   # ---------------------------------------------------------------------------
+  
   ld.matrix.plot.2vars <- function(dat, pop.name, ld.varnames, map.order, 
     ld.labnames=ld.varnames, bw=FALSE, xlab.shift=1, ylab.shift=-5, values=FALSE, cex.ld=.9) {
     dat2 <- dat[dat$pop==pop.name,]  
@@ -163,7 +165,7 @@ shinyServer(function(input, output) {
     if (bw)  stat.colors <- rev(gray((0:(length(stat.breaks)-2))/(length(stat.breaks)-2)))
     if (!bw) stat.colors <- c("gray",rev(rainbow((length(stat.breaks)-1)))[-(length(stat.breaks)-10)])
     # zlim: only use colors in this range
-    image.plot(x,y,zz,xaxt="n",yaxt="n",axes=F,xlab="",ylab="",zlim=z.lim,
+    fields::image.plot(x,y,zz,xaxt="n",yaxt="n",axes=F,xlab="",ylab="",zlim=z.lim,
       horizontal=F,col=stat.colors,breaks=stat.breaks) 
     
     # Add a light grid with dashed lines
