@@ -5,7 +5,7 @@
 #' one locus that are found on haplotypes with a specific allele (the focal allele) at the 
 #' other locus (the focal locus). 
 #' 
-#' @param dat	A data.frame with 5 required variables:
+#' @param dat	A data.frame with 5 required variables (having the names listed below):
 #'      \tabular{ll}{
 #'           \code{haplo.freq} \tab A numeric vector of haplotype frequencies.\cr
 #'            \code{locus1} \tab A character vector indentifying the first locus.\cr

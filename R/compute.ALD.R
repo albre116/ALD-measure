@@ -2,7 +2,7 @@
 #'
 #' A function to compute asymmetric Linkage Disequilibrium measures (ALD) for polymorphic genetic data. These measures are identical to the correlation measure (r) for bi-allelic data.
 #' 
-#' @param dat	A data.frame with 5 required variables:
+#' @param dat	A data.frame with 5 required variables (having the names listed below):
 #'      \tabular{ll}{
 #'           \code{haplo.freq} \tab A numeric vector of haplotype frequencies.\cr
 #'            \code{locus1} \tab A character vector indentifying the first locus.\cr
