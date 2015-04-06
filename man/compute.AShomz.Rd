@@ -4,11 +4,11 @@
 \alias{compute.AShomz}
 \title{Compute allele specific homozygosity.}
 \usage{
-compute.AShomz(dat, tolerance = 0.005, sort.var = c("focal", "allele"),
+compute.AShomz(dat, tolerance = 0.01, sort.var = c("focal", "allele"),
   sort.asc = rep(TRUE, length(sort.var)))
 }
 \arguments{
-\item{dat}{A data.frame with 5 required variables:
+\item{dat}{A data.frame with 5 required variables (having the names listed below):
 \tabular{ll}{
      \code{haplo.freq} \tab A numeric vector of haplotype frequencies.\cr
       \code{locus1} \tab A character vector indentifying the first locus.\cr
@@ -19,7 +19,7 @@ compute.AShomz(dat, tolerance = 0.005, sort.var = c("focal", "allele"),
 
 \item{tolerance}{A threshold for the sum of the haplotype frequencies.
 If the sum of the haplotype frequencies is greater than 1+tolerance or less
-than 1-tolerance an error is returned.}
+than 1-tolerance an error is returned. The default is 0.01.}
 
 \item{sort.var}{a vector of variable names specifying the "sort by" variables. The default is c("focal","allele").}
 
@@ -44,7 +44,7 @@ other locus (the focal locus).
 \section{Details}{
 
 A warning message is given if the sum of the haplotype frequencies is greater than 1.01 or less
-than 0.99. The haplotype frequencies that are passed to the function are normalized within
+than 0.99 (regardless of the \code{tolerance} setting). The haplotype frequencies that are passed to the function are normalized within
 the function to sum to 1.0 by dividing each frequency by the sum of the passed frequencies.
 }
 \examples{
@@ -56,7 +56,7 @@ data(hla.freqs)
 hla.dr_dq <- hla.freqs[hla.freqs$locus1=="DRB1" & hla.freqs$locus2=="DQB1",]
 compute.ALD(hla.dr_dq)
 compute.AShomz(hla.dr_dq, sort.var=c("focal","allele"), sort.asc=c(T,T))
-compute.AShomz(hla.dr_dq, sort.var=c("focal","allele.freq"), sort.asc=c(T,F))
+compute.AShomz(hla.dr_dq, sort.var=c("focal","allele.freq"), sort.asc=c(F,F))
 # Note that there is substantially less variablity (higher ALD) for HLA*DQB1
 # conditional on HLA*DRB1 than for HLA*DRB1 conditional on HLA*DQB1, indicating
 # that the overall variation for DQB1 is relatively low given specific DRB1 alleles.
