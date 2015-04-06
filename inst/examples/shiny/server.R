@@ -51,7 +51,7 @@ shinyServer(function(input, output) {
     ald.allpairs$pop <- pop.use
     ld.matrix.plot.2vars(dat=ald.allpairs, pop.name=pop.use,
       ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci,
-      ld.labnames=c("ALD","ALD"), bw=T, xlab.shift=1, ylab.shift=-0, values=T)
+      ld.labnames=c("ALD","ALD"), bw=T, xlab.shift=1, ylab.shift=-0, values=input$values)
     title(sub=paste(pop.use,": Asymmetric LD\n row gene conditional on
       column gene",sep=""),font.sub=2,cex.sub=1.2)
     
