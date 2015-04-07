@@ -1,6 +1,15 @@
 library(shiny)
 library(asymLD)
 
+# Function to check whether package is installed
+is.installed <- function(mypkg){
+  is.element(mypkg, installed.packages()[,1])
+} 
+
+if (!is.installed("fields")){
+  install.packages("fields")
+}
+
 shinyServer(function(input, output) {
  
   # display data
