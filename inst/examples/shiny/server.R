@@ -10,6 +10,18 @@ if (!is.installed("fields")){
   install.packages("fields")
 }
 
+script <- "$('tbody tr td:nth-child(5)').each(function() {
+
+              var cellValue = $(this).text();
+
+              if (cellValue > 50) {
+                $(this).css('background-color', '#0c0');
+              }
+              else if (cellValue <= 50) {
+                $(this).css('background-color', '#f00');
+              }
+            })"
+
 shinyServer(function(input, output) {
  
   # display data
@@ -32,6 +44,34 @@ shinyServer(function(input, output) {
     data <- data[!rm.inds, ]
     data
   })
+  
+  # asf table
+  output$asf_table <- renderDataTable({
+    
+    inFile <- input$file1
+    
+    if (is.null(inFile))
+      return(NULL)
+    
+    data <- read.csv(inFile$datapath, header=input$header, sep=input$sep)
+    # remove haplotypes with freq == 0 
+    rm.inds <- data[, dim(data)[2]] == 0
+    data <- data[!rm.inds, ]
+    bi.data <- get_bilocus_data(data, 1, 2)
+    
+    
+    bi.data$locus1 = as.character(bi.data$locus1)
+    bi.data$locus2 = as.character(bi.data$locus2)
+    print(class(bi.data$locus1[3]))
+    
+    compute.AShomz(bi.data, sort.var=c("focal","allele.freq"), sort.asc=c(F,F))
+#     data(hla.freqs)
+#     hla.dr_dq <- hla.freqs[hla.freqs$locus1=="DRB1" & hla.freqs$locus2=="DQB1",]
+#     compute.ALD(hla.dr_dq)
+#     compute.AShomz(hla.dr_dq, sort.var=c("focal","allele.freq"), sort.asc=c(F,F))
+  
+    
+    })
   
    
    # plot of asymetric LD
