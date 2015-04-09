@@ -2,59 +2,67 @@ library(shiny)
 library(asymLD)
 
 shinyServer(function(input, output) {
- 
-  # display data
-   output$contents <- renderDataTable({
-    
+  
+  dataInput <- reactive({
     # input$file1 will be NULL initially. After the user selects
     # and uploads a file, it will be a data frame with 'name',
     # 'size', 'type', and 'datapath' columns. The 'datapath'
     # column will contain the local filenames where the data can
     # be found.
-    
     inFile <- input$file1
-    
     if (is.null(inFile))
       return(NULL)
-    
     data <- read.csv(inFile$datapath, header=input$header, sep=input$sep)
     # remove haplotypes with freq == 0 
     rm.inds <- data[, dim(data)[2]] == 0
-    data <- data[!rm.inds, ]
-    data
+    data <- data[!rm.inds, ]    
   })
   
+  # display data
+  output$raw_data <- renderDataTable({
+    dataInput()
+  })
    
-   # plot of asymetric LD
-  output$heatmap <- renderPlot({
-    
-    inFile <- input$file1
-    
-    if (is.null(inFile))
+  # prepare the data for plotting function
+  plotData <- reactive({
+    data <- dataInput()
+    if (is.null(data))
       return(NULL)
-    
-    data <- read.csv(inFile$datapath, header=input$header, sep=input$sep)
-    data <- data[data[, dim(data)[2]] != 0, ] # remove freq == 0 rows 
-    pop.use <- names(data)[dim(data)[2]]
-    nloci <- dim(data)[2]-1
-    loci <- names(data)[1:nloci]
-    
-    ald.allpairs <- NULL
-    for (i in 1:(nloci-1)){
-      for (j in (i+1):nloci){
-        bi.data <- get_bilocus_data(data, i, j)
-        ald.allpairs <- rbind(ald.allpairs, compute.ALD(bi.data))
+    else {
+      pop.use <- names(data)[dim(data)[2]]
+      nloci <- dim(data)[2]-1
+      loci <- names(data)[1:nloci]
+      
+      ald.allpairs <- NULL
+      for (i in 1:(nloci-1)){
+        for (j in (i+1):nloci){
+          bi.data <- get_bilocus_data(data, i, j)
+          ald.allpairs <- rbind(ald.allpairs, compute.ALD(bi.data))
+        }
       }
+      ald.allpairs
     }
-    
-    # prepare the data for plotting function
-    ald.allpairs$pop <- pop.use
-    ld.matrix.plot.2vars(dat=ald.allpairs, pop.name=pop.use,
-      ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci,
-      ld.labnames=c("ALD","ALD"), bw=T, xlab.shift=1, ylab.shift=-0, values=input$values)
-    title(sub=paste(pop.use,": Asymmetric LD\n row gene conditional on
-      column gene",sep=""),font.sub=2,cex.sub=1.2)
-    
+  })
+
+  # display plotData
+  output$plot_data <- renderDataTable({
+    plotData()
+  })
+  
+  # plot of asymetric LD      
+  output$heatmap <- renderPlot({      
+    data <- plotData()
+    if (is.null(data))
+      return(NULL)
+    else {
+      loci <- unique(c(as.character(data$locus1),as.character(data$locus2)))
+      ld.matrix.plot.2vars(dat=data, 
+                           ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci,
+                           ld.labnames=c("ALD","ALD"), bw=T, xlab.shift=1, ylab.shift=-0, 
+                           values=input$values)
+      title(sub=paste("Asymmetric LD\n row gene conditional on
+      column gene"),font.sub=2,cex.sub=1.2)            
+    }
   })
   
   
@@ -85,9 +93,9 @@ shinyServer(function(input, output) {
   # Function for plotting the ALD heatmap
   # ---------------------------------------------------------------------------
   
-  ld.matrix.plot.2vars <- function(dat, pop.name, ld.varnames, map.order, 
+  ld.matrix.plot.2vars <- function(dat, ld.varnames, map.order, 
     ld.labnames=ld.varnames, bw=FALSE, xlab.shift=1, ylab.shift=-5, values=FALSE, cex.ld=.9) {
-    dat2 <- dat[dat$pop==pop.name,]  
+    dat2 <- dat
     
     # swap order of locus1 & locus2 in cases where they are not listed in 
     # map.order with locus1 coming before locus2
