@@ -22,7 +22,8 @@ shinyUI(fluidPage(
       tabsetPanel(type = "tabs", 
         tabPanel("ALD Plot", plotOutput('heatmap')), 
         tabPanel("ASF Table", tableOutput("asf_table")),
-        tabPanel("Data", dataTableOutput('contents'))
+        tabPanel("ALD Data", dataTableOutput('plot_data')),
+        tabPanel("raw Data", dataTableOutput('raw_data'))
       )
     )
     
