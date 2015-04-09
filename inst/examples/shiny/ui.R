@@ -1,6 +1,9 @@
 library(shiny)
 
+
+
 shinyUI(fluidPage(
+  tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("jsCode", function(message) { eval(message.value); });'))),
   titlePanel("ALD: Asymmetric Linkage Disequilibrium"),
   sidebarLayout(
     sidebarPanel(

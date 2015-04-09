@@ -10,20 +10,23 @@ if (!is.installed("fields")){
   install.packages("fields")
 }
 
+
 script <- "$('tbody tr td:nth-child(5)').each(function() {
-
+              
               var cellValue = $(this).text();
+              console.log(cellValue)
 
-              if (cellValue > 50) {
+              if (cellValue > 0.5) {
                 $(this).css('background-color', '#0c0');
               }
-              else if (cellValue <= 50) {
+              else if (cellValue <= 0.5) {
                 $(this).css('background-color', '#f00');
               }
             })"
 
-shinyServer(function(input, output) {
- 
+shinyServer(function(input, output, session) {
+  
+  
   # display data
    output$contents <- renderDataTable({
     
@@ -47,6 +50,10 @@ shinyServer(function(input, output) {
   
   # asf table
   output$asf_table <- renderDataTable({
+    
+    session$onFlushed(function() {
+      session$sendCustomMessage(type='jsCode', list(value = script))
+    }, once = FALSE)
     
     inFile <- input$file1
     
