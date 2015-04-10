@@ -11,20 +11,32 @@ if (!is.installed("fields")){
 }
 
 
-script <- "$('tbody tr td:nth-child(5)').each(function() {
+script <- "
+              console.log('I ran!')
               
-              var cellValue = $(this).text();
-              console.log(cellValue)
-
-              if (cellValue > 0.5) {
-                $(this).css('background-color', '#0c0');
+              //This is a crazy hacky way to do this, but it works!
+              //It waits to execute the javascript code 200 miliseconds. This is needed because shiny loads the javascript before it loads the table
+              //and thus has nothing to color. 
+              window.setTimeout( function(){ 
+                $('tbody tr td:nth-child(5)').each(function() {
+               
+                var cellValue = $(this).text();
+  
+                if (cellValue > 0.5) {
+                  $(this).css('background-color', '#0c0');
+                }
+                else if (cellValue <= 0.5) {
+                  $(this).css('background-color', '#f00');
+                }
+              })
               }
-              else if (cellValue <= 0.5) {
-                $(this).css('background-color', '#f00');
-              }
-            })"
+            , 200);"
 
 shinyServer(function(input, output, session) {
+  
+  session$onFlushed(function() {
+    session$sendCustomMessage(type='jsCode', list(value = script))
+  }, once = FALSE)
   
   
   # display data
@@ -48,13 +60,10 @@ shinyServer(function(input, output, session) {
     data
   })
   
+########################################################################################################################
   # asf table
   output$asf_table <- renderDataTable({
-    
-    session$onFlushed(function() {
-      session$sendCustomMessage(type='jsCode', list(value = script))
-    }, once = FALSE)
-    
+
     inFile <- input$file1
     
     if (is.null(inFile))
@@ -66,21 +75,23 @@ shinyServer(function(input, output, session) {
     data <- data[!rm.inds, ]
     bi.data <- get_bilocus_data(data, 1, 2)
     
-    
     bi.data$locus1 = as.character(bi.data$locus1)
     bi.data$locus2 = as.character(bi.data$locus2)
-    print(class(bi.data$locus1[3]))
     
     compute.AShomz(bi.data, sort.var=c("focal","allele.freq"), sort.asc=c(F,F))
-#     data(hla.freqs)
-#     hla.dr_dq <- hla.freqs[hla.freqs$locus1=="DRB1" & hla.freqs$locus2=="DQB1",]
-#     compute.ALD(hla.dr_dq)
-#     compute.AShomz(hla.dr_dq, sort.var=c("focal","allele.freq"), sort.asc=c(F,F))
-  
-    
     })
+
+########################################################################################################################
+
+  output$testingAsf <- renderUI({
+    list(
+      tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("jsCode", function(message) { eval(message.value); });')))
+      , dataTableOutput("asf_table")
+    )
+  })
   
-   
+########################################################################################################################
+  
    # plot of asymetric LD
   output$heatmap <- renderPlot({
     

@@ -3,7 +3,7 @@ library(shiny)
 
 
 shinyUI(fluidPage(
-  tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("jsCode", function(message) { eval(message.value); });'))),
+#   tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("jsCode", function(message) { eval(message.value); });'))),
   titlePanel("ALD: Asymmetric Linkage Disequilibrium"),
   sidebarLayout(
     sidebarPanel(
@@ -24,7 +24,8 @@ shinyUI(fluidPage(
     mainPanel(
       tabsetPanel(type = "tabs", 
         tabPanel("ALD Plot", plotOutput('heatmap')), 
-        tabPanel("ASF Table", dataTableOutput("asf_table")),
+        #tabPanel("ASF Table", dataTableOutput("asf_table")),
+        tabPanel("Testing!", uiOutput("testingAsf")),
         tabPanel("Data", dataTableOutput('contents'))
       )
     )
