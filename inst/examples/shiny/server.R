@@ -14,21 +14,30 @@ if (!is.installed("fields")){
 script <- "
               console.log('I ran!')
               
+              var homzScale = d3.scale.linear()
+                          .domain([0,1])
+                          .range(['#4daf4a', '#e41a1c'])
+                            
+              var freqScale = d3.scale.linear()
+                          .domain([0,.3])
+                          .range(['#4daf4a', '#e41a1c'])
+
               //This is a crazy hacky way to do this, but it works!
               //It waits to execute the javascript code 200 miliseconds. This is needed because shiny loads the javascript before it loads the table
               //and thus has nothing to color. 
-              window.setTimeout( function(){ 
+              window.setInterval( function(){ 
                 $('tbody tr td:nth-child(5)').each(function() {
-               
-                var cellValue = $(this).text();
-  
-                if (cellValue > 0.5) {
-                  $(this).css('background-color', '#0c0');
-                }
-                else if (cellValue <= 0.5) {
-                  $(this).css('background-color', '#f00');
-                }
-              })
+                  var cellValue = $(this).text();
+
+                  $(this).css('background-color', homzScale(cellValue));
+                 })
+
+                $('tbody tr td:nth-child(4)').each(function() {
+                  var cellValue = $(this).text();
+
+                  $(this).css('background-color', freqScale(cellValue));
+                 })
+    
               }
             , 200);"
 
