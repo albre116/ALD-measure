@@ -26,17 +26,20 @@ script <- "
               //It waits to execute the javascript code 200 miliseconds. This is needed because shiny loads the javascript before it loads the table
               //and thus has nothing to color. 
               window.setInterval( function(){ 
-                $('tbody tr td:nth-child(5)').each(function() {
-                  var cellValue = $(this).text();
-
-                  $(this).css('background-color', homzScale(cellValue));
-                 })
-
-                $('tbody tr td:nth-child(4)').each(function() {
-                  var cellValue = $(this).text();
-
-                  $(this).css('background-color', freqScale(cellValue));
-                 })
+                if(d3.select('#tab-9992-2').classed('active')){
+                   $('tbody tr td:nth-child(5)').each(function() {
+                    var cellValue = $(this).text();
+  
+                    $(this).css('background-color', homzScale(cellValue));
+                   })
+  
+                  $('tbody tr td:nth-child(4)').each(function() {
+                    var cellValue = $(this).text();
+  
+                    $(this).css('background-color', freqScale(cellValue));
+                   })
+                }
+   
     
               }
             , 200);"
