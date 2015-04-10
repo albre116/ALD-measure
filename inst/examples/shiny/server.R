@@ -12,37 +12,43 @@ if (!is.installed("fields")){
 
 
 script <- "
-              console.log('I ran!')
-              
-              var homzScale = d3.scale.linear()
-                          .domain([0,1])
-                          .range(['#4daf4a', '#e41a1c'])
-                            
-              var freqScale = d3.scale.linear()
-                          .domain([0,.3])
-                          .range(['#4daf4a', '#e41a1c'])
+console.log('I ran!')
 
-              //This is a crazy hacky way to do this, but it works!
-              //It waits to execute the javascript code 200 miliseconds. This is needed because shiny loads the javascript before it loads the table
-              //and thus has nothing to color. 
-              window.setInterval( function(){ 
-                if(d3.select('#tab-9992-2').classed('active')){
-                   $('tbody tr td:nth-child(5)').each(function() {
-                    var cellValue = $(this).text();
-  
-                    $(this).css('background-color', homzScale(cellValue));
-                   })
-  
-                  $('tbody tr td:nth-child(4)').each(function() {
-                    var cellValue = $(this).text();
-  
-                    $(this).css('background-color', freqScale(cellValue));
-                   })
-                }
-   
-    
-              }
-            , 200);"
+var homzScale = d3.scale.linear()
+.domain([0,1])
+.range(['#4daf4a', '#e41a1c'])
+
+var freqScale = d3.scale.linear()
+.domain([0,.3])
+.range(['#4daf4a', '#e41a1c'])
+
+//This is a crazy hacky way to do this, but it works!
+//It waits to execute the javascript code 200 miliseconds. This is needed because shiny loads the javascript before it loads the table
+//and thus has nothing to color.
+window.setInterval( function(){
+
+//console.log($('.tab-pane').filter(\"[data-value='Testing!']\").hasClass('active'))
+if($('.tab-pane').filter(\"[data-value='Testing!']\").hasClass('active')){
+$('tbody tr td:nth-child(5)').each(function() {
+var cellValue = $(this).text();
+
+$(this).css('background-color', homzScale(cellValue));
+})
+
+$('tbody tr td:nth-child(4)').each(function() {
+var cellValue = $(this).text();
+
+$(this).css('background-color', freqScale(cellValue));
+})
+}
+
+
+}
+, 200);
+
+
+
+"
 
 shinyServer(function(input, output, session) {
   
