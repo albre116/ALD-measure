@@ -27,7 +27,8 @@ shinyUI(fluidPage(
         #tabPanel("ASF Table", dataTableOutput("asf_table")),
         tabPanel("Testing!", uiOutput("testingAsf")),
         tabPanel("Data", dataTableOutput('contents'))
-      )
+      ),
+      tags$head(tags$script(src="d3.js"))
     )
     
     
