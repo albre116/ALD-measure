@@ -18,7 +18,7 @@ var freqScale = d3.scale.linear()
 window.setInterval( function(){
 
 console.log($('.tab-pane').filter("[data-value='Testing!']").hasClass('active'))
-if(true){
+if(false){
      $('tbody tr td:nth-child(5)').each(function() {
       var cellValue = $(this).text();
 

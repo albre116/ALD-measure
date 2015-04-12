@@ -12,6 +12,7 @@ if (!is.installed("fields")){
 
 
 script <- "
+
 console.log('I ran!')
 
 var homzScale = d3.scale.linear()
@@ -25,27 +26,22 @@ var freqScale = d3.scale.linear()
 //This is a crazy hacky way to do this, but it works!
 //It waits to execute the javascript code 200 miliseconds. This is needed because shiny loads the javascript before it loads the table
 //and thus has nothing to color.
+
 window.setInterval( function(){
 
-//console.log($('.tab-pane').filter(\"[data-value='Testing!']\").hasClass('active'))
-if($('.tab-pane').filter(\"[data-value='Testing!']\").hasClass('active')){
-$('tbody tr td:nth-child(5)').each(function() {
-var cellValue = $(this).text();
-
-$(this).css('background-color', homzScale(cellValue));
-})
-
-$('tbody tr td:nth-child(4)').each(function() {
-var cellValue = $(this).text();
-
-$(this).css('background-color', freqScale(cellValue));
-})
-}
-
-
+  $('#DataTables_Table_0 tbody tr td:nth-child(5)').each(function() {
+    var cellValue = $(this).text();
+    
+    $(this).css('background-color', homzScale(cellValue));
+    })
+    
+    $('#DataTables_Table_0 tbody tr td:nth-child(4)').each(function() {
+    var cellValue = $(this).text();
+    
+    $(this).css('background-color', freqScale(cellValue));
+    })
 }
 , 200);
-
 
 
 "
@@ -96,7 +92,9 @@ shinyServer(function(input, output, session) {
     bi.data$locus1 = as.character(bi.data$locus1)
     bi.data$locus2 = as.character(bi.data$locus2)
     
-    compute.AShomz(bi.data, sort.var=c("focal","allele.freq"), sort.asc=c(F,F))
+    table = compute.AShomz(bi.data, sort.var=c("focal","allele.freq"), sort.asc=c(F,F))
+    maxFreq = max(table$allele.freq) #Figure out how to get this onto the page. 
+    table
     })
 
 ########################################################################################################################
