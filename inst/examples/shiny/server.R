@@ -15,31 +15,55 @@ if (!is.installed("fields")){
 
 script <- "
 var homzScale = d3.scale.linear()
-  .domain([0,1])
+  .domain([0, 1])
   .range(['#4daf4a', '#e41a1c'])
 
 var freqScale = d3.scale.linear()
-  .domain([0,.3])
+  .domain([0, .3])
   .range(['#4daf4a', '#e41a1c'])
 
 //Waits to execute the javascript code 200 miliseconds. This is needed because shiny loads the javascript before it loads the table
 //and thus has nothing to color.
 
-window.setInterval( function(){
+freqTableVals = [] // initialize array to store table values for color scaling.
+homzTableVals = []
 
-  d3.selectAll('#DataTables_Table_0 tbody tr td:nth-child(5)')
-    .style('background-color', function() {
+window.setInterval(function() {
+  freqTableVals = []
+  homzTableVals = []
+  //Grab the allele freq column's max and mins
+  d3.selectAll('#DataTables_Table_0 tbody tr td:nth-child(4)')
+    .each(function() {
       var cellValue = d3.select(this).text();
-      return(homzScale(cellValue))
+      freqTableVals.push(parseFloat(cellValue))
     })
-
+  
+  freqColorRange = d3.extent(freqTableVals)
+  freqScale.domain(freqColorRange)
+  
+  //grab the homz column's max and mins
+  d3.selectAll('#DataTables_Table_0 tbody tr td:nth-child(5)')
+    .each(function() {
+      var cellValue = d3.select(this).text();
+      homzTableVals.push(parseFloat(cellValue))
+    })
+  homzColorRange = d3.extent(homzTableVals)
+  homzScale.domain(homzColorRange)
+  
+  //Set the colors for the allele freq
   d3.selectAll('#DataTables_Table_0 tbody tr td:nth-child(4)')
     .style('background-color', function() {
       var cellValue = d3.select(this).text();
-      return(freqScale(cellValue))
+      return (freqScale(cellValue))
     })
-}
-, 200);
+  //set colors for homz freq
+  d3.selectAll('#DataTables_Table_0 tbody tr td:nth-child(5)')
+    .style('background-color', function() {
+      var cellValue = d3.select(this).text();
+      return (homzScale(cellValue))
+    })
+}, 200);
+
 "
 
 shinyServer(function(input, output, session) {
