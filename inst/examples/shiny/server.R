@@ -12,19 +12,15 @@ if (!is.installed("fields")){
 
 
 script <- "
-
-console.log('I ran!')
-
 var homzScale = d3.scale.linear()
-.domain([0,1])
-.range(['#4daf4a', '#e41a1c'])
+  .domain([0,1])
+  .range(['#4daf4a', '#e41a1c'])
 
 var freqScale = d3.scale.linear()
-.domain([0,.3])
-.range(['#4daf4a', '#e41a1c'])
+  .domain([0,.3])
+  .range(['#4daf4a', '#e41a1c'])
 
-//This is a crazy hacky way to do this, but it works!
-//It waits to execute the javascript code 200 miliseconds. This is needed because shiny loads the javascript before it loads the table
+//Waits to execute the javascript code 200 miliseconds. This is needed because shiny loads the javascript before it loads the table
 //and thus has nothing to color.
 
 window.setInterval( function(){
@@ -42,8 +38,6 @@ window.setInterval( function(){
     })
 }
 , 200);
-
-
 "
 
 shinyServer(function(input, output, session) {
