@@ -20,7 +20,6 @@ shinyUI(fluidPage(
 
     mainPanel(
       tags$head(tags$script(src="d3.js")),
-      includeHTML("d3Script.js"),
       tabsetPanel(type = "tabs", 
         tabPanel("ALD Plot", plotOutput('heatmap')), 
         tabPanel("ASF Table", uiOutput("asf_display")),

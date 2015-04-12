@@ -1,4 +1,4 @@
-devtools::install_github("vpaunic/ALD-Measure")
+#devtools::install_github("vpaunic/ALD-Measure")
 library(shiny)
 library(asymLD)
 
