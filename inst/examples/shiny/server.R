@@ -1,5 +1,7 @@
+devtools::install_github("vpaunic/ALD-Measure")
 library(shiny)
 library(asymLD)
+
 
 # Function to check whether package is installed
 is.installed <- function(mypkg){
@@ -25,16 +27,16 @@ var freqScale = d3.scale.linear()
 
 window.setInterval( function(){
 
-  $('#DataTables_Table_0 tbody tr td:nth-child(5)').each(function() {
-    var cellValue = $(this).text();
-    
-    $(this).css('background-color', homzScale(cellValue));
+  d3.selectAll('#DataTables_Table_0 tbody tr td:nth-child(5)')
+    .style('background-color', function() {
+      var cellValue = d3.select(this).text();
+      return(homzScale(cellValue))
     })
-    
-    $('#DataTables_Table_0 tbody tr td:nth-child(4)').each(function() {
-    var cellValue = $(this).text();
-    
-    $(this).css('background-color', freqScale(cellValue));
+
+  d3.selectAll('#DataTables_Table_0 tbody tr td:nth-child(4)')
+    .style('background-color', function() {
+      var cellValue = d3.select(this).text();
+      return(freqScale(cellValue))
     })
 }
 , 200);
@@ -93,7 +95,7 @@ shinyServer(function(input, output, session) {
 
 ########################################################################################################################
 
-  output$testingAsf <- renderUI({
+  output$asf_display <- renderUI({
     list(
       tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("jsCode", function(message) { eval(message.value); });')))
       , dataTableOutput("asf_table")
