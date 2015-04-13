@@ -15,7 +15,9 @@ shinyUI(fluidPage(
           Semicolon=';',
           Tab='\t'),
         ','),
-      checkboxInput('values', 'Show ALD values', TRUE)      
+      checkboxInput('values', 'Show ALD values', TRUE),
+      numericInput('tol', label = "tolerance (for sum of haplo.freqs)", value = 0.01, min = 0.01, max = 0.1, step = 0.01)
+      
     ),
 
     mainPanel(
