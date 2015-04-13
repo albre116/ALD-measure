@@ -37,7 +37,7 @@ shinyServer(function(input, output) {
       for (i in 1:(nloci-1)){
         for (j in (i+1):nloci){
           bi.data <- get_bilocus_data(data, i, j)
-          ald.allpairs <- rbind(ald.allpairs, compute.ALD(bi.data))
+          ald.allpairs <- rbind(ald.allpairs, compute.ALD(bi.data, tolerance=input$tol))      
         }
       }
       ald.allpairs
