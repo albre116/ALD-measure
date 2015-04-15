@@ -145,12 +145,16 @@ shinyServer(function(input, output, session) {
   # asf table
   output$asf_table <- renderDataTable({
     data <- dataInput()
-    bi.data <- get_bilocus_data(data, 1, 2)
-    bi.data$locus1 = as.character(bi.data$locus1)
-    bi.data$locus2 = as.character(bi.data$locus2)
-    table = compute.AShomz(bi.data, sort.var=c("focal","allele.freq"), sort.asc=c(F,F), tolerance=input$tol)
-    maxFreq = max(table$allele.freq) #Figure out how to get this onto the page. 
-    table
+    if (is.null(data))
+      return(NULL) 
+    else {
+      bi.data <- get_bilocus_data(data, 1, 2)
+      bi.data$locus1 = as.character(bi.data$locus1)
+      bi.data$locus2 = as.character(bi.data$locus2)
+      table = compute.AShomz(bi.data, sort.var=c("focal","allele.freq"), sort.asc=c(F,F), tolerance=input$tol)
+      maxFreq = max(table$allele.freq) #Figure out how to get this onto the page. 
+      table
+    }
   })
 
 ########################################################################################################################
