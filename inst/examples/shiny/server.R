@@ -1,7 +1,74 @@
+#devtools::install_github("vpaunic/ALD-Measure")
 library(shiny)
 library(asymLD)
 
-shinyServer(function(input, output) {
+# Function to check whether package is installed
+is.installed <- function(mypkg){
+  is.element(mypkg, installed.packages()[,1])
+} 
+
+if (!is.installed("fields")){
+  install.packages("fields")
+}
+
+
+script <- "
+var homzScale = d3.scale.linear()
+  .domain([0, 1])
+  .range(['#4daf4a', '#e41a1c'])
+
+var freqScale = d3.scale.linear()
+  .domain([0, .3])
+  .range(['#4daf4a', '#e41a1c'])
+
+//Waits to execute the javascript code 200 miliseconds. This is needed because shiny loads the javascript before it loads the table
+//and thus has nothing to color.
+
+freqTableVals = [] // initialize array to store table values for color scaling.
+homzTableVals = []
+
+window.setInterval(function() {
+  freqTableVals = []
+  homzTableVals = []
+  //Grab the allele freq column's max and mins
+  d3.selectAll('#DataTables_Table_0 tbody tr td:nth-child(4)')
+    .each(function() {
+      var cellValue = d3.select(this).text();
+      freqTableVals.push(parseFloat(cellValue))
+    })
+  
+  freqColorRange = d3.extent(freqTableVals)
+  freqScale.domain(freqColorRange)
+  
+  //grab the homz column's max and mins
+  d3.selectAll('#DataTables_Table_0 tbody tr td:nth-child(5)')
+    .each(function() {
+      var cellValue = d3.select(this).text();
+      homzTableVals.push(parseFloat(cellValue))
+    })
+  homzColorRange = d3.extent(homzTableVals)
+  homzScale.domain(homzColorRange)
+  
+  //Set the colors for the allele freq
+  d3.selectAll('#DataTables_Table_0 tbody tr td:nth-child(4)')
+    .style('background-color', function() {
+      var cellValue = d3.select(this).text();
+      return (freqScale(cellValue))
+    })
+  //set colors for homz freq
+  d3.selectAll('#DataTables_Table_0 tbody tr td:nth-child(5)')
+    .style('background-color', function() {
+      var cellValue = d3.select(this).text();
+      return (homzScale(cellValue))
+    })
+}, 200);
+"
+
+shinyServer(function(input, output, session) {
+  
+  session$onFlushed(function() {
+    session$sendCustomMessage(type='jsCode', list(value = script))
+  }, once = FALSE)
   
   dataInput <- reactive({
     # input$file1 will be NULL initially. After the user selects
@@ -43,7 +110,7 @@ shinyServer(function(input, output) {
       ald.allpairs
     }
   })
-
+  
   # display statistic definitions above plotData
   output$text_ALDdata <- renderText({
     paste("F.1    Homozygosity (expected under HWP) for locus 1", 
@@ -74,6 +141,28 @@ shinyServer(function(input, output) {
     }
   })
   
+########################################################################################################################
+  # asf table
+  output$asf_table <- renderDataTable({
+    data <- dataInput()
+    bi.data <- get_bilocus_data(data, 1, 2)
+    bi.data$locus1 = as.character(bi.data$locus1)
+    bi.data$locus2 = as.character(bi.data$locus2)
+    table = compute.AShomz(bi.data, sort.var=c("focal","allele.freq"), sort.asc=c(F,F), tolerance=input$tol)
+    maxFreq = max(table$allele.freq) #Figure out how to get this onto the page. 
+    table
+  })
+
+########################################################################################################################
+
+  output$asf_display <- renderUI({
+    list(
+      tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("jsCode", function(message) { eval(message.value); });')))
+      , dataTableOutput("asf_table")
+    )
+  })
+  
+########################################################################################################################
   
   # -------------------------- HELPER FUNCTIONS -------------------------------
   
@@ -96,7 +185,6 @@ shinyServer(function(input, output) {
     row.names(bi.data) <- NULL
     return(bi.data)
   }
-  
   
   # ---------------------------------------------------------------------------
   # Function for plotting the ALD heatmap
