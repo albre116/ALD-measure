@@ -9,7 +9,7 @@ shinyUI(fluidPage(
           'text/comma-separated-values,text/plain', 
           '.csv')),
       tags$hr(),
-      checkboxInput('header', 'Header', TRUE),      
+     #checkboxInput('header', 'Header', TRUE),      
       radioButtons('sep', 'Separator',
         c(Comma=',',
           Semicolon=';',

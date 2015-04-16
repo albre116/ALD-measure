@@ -88,10 +88,10 @@ shinyServer(function(input, output, session) {
     inFile <- input$file1
     if (is.null(inFile))
       return(NULL)
-    data <- read.csv(inFile$datapath, header=input$header, sep=input$sep)
+    data <- read.csv(inFile$datapath, header=TRUE, sep=input$sep)
     # remove haplotypes with freq == 0 
     rm.inds <- data[, dim(data)[2]] == 0
-    data <- data[!rm.inds, ]    
+    data <- data[!rm.inds, ]      
   })
   
   # display data
@@ -105,16 +105,27 @@ shinyServer(function(input, output, session) {
     if (is.null(data))
       return(NULL)
     else {
-      pop.use <- names(data)[dim(data)[2]]
-      nloci <- dim(data)[2]-1
-      loci <- names(data)[1:nloci]
-      
-      ald.allpairs <- NULL
-      for (i in 1:(nloci-1)){
-        for (j in (i+1):nloci){
-          bi.data <- get_bilocus_data(data, i, j)
-          ald.allpairs <- rbind(ald.allpairs, compute.ALD(bi.data, tolerance=input$tol))      
-        }
+      data.type2 <- TRUE
+      names.type2 <- c("locus1", "locus2", "allele1", "allele2", "haplo.freq")
+      check.names <- names.type2 %in% names(data)    
+      if (sum(!check.names) > 0) data.type2 <- FALSE
+      if (data.type2){
+        data$locus <- paste(data$locus1, data$locus2, sep="-")
+        out<- by(data, list(locus=data$locus), compute.ALD)
+        rbind.out <- NULL
+        for (i in 1:length(out)) rbind.out <- rbind(rbind.out,out[[i]])
+        ald.allpairs <- rbind.out 
+      } else {
+       #pop.use <- names(data)[dim(data)[2]]
+        nloci <- dim(data)[2]-1
+        loci <- names(data)[1:nloci]
+        ald.allpairs <- NULL
+        for (i in 1:(nloci-1)){
+          for (j in (i+1):nloci){
+            bi.data <- get_bilocus_data(data, i, j)
+            ald.allpairs <- rbind(ald.allpairs, compute.ALD(bi.data, tolerance=input$tol))      
+          }
+        }        
       }
       ald.allpairs
     }
