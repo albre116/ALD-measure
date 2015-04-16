@@ -31,7 +31,7 @@ window.setInterval(function() {
   freqTableVals = []
   homzTableVals = []
   //Grab the allele freq column's max and mins
-  d3.selectAll('#DataTables_Table_0 tbody tr td:nth-child(4)')
+  d3.selectAll('#asf_table tbody tr td:nth-child(4)')
     .each(function() {
       var cellValue = d3.select(this).text();
       freqTableVals.push(parseFloat(cellValue))
@@ -41,7 +41,7 @@ window.setInterval(function() {
   freqScale.domain(freqColorRange)
   
   //grab the homz column's max and mins
-  d3.selectAll('#DataTables_Table_0 tbody tr td:nth-child(5)')
+  d3.selectAll('#asf_table tbody tr td:nth-child(5)')
     .each(function() {
       var cellValue = d3.select(this).text();
       homzTableVals.push(parseFloat(cellValue))
@@ -50,13 +50,13 @@ window.setInterval(function() {
   homzScale.domain(homzColorRange)
   
   //Set the colors for the allele freq
-  d3.selectAll('#DataTables_Table_0 tbody tr td:nth-child(4)')
+  d3.selectAll('#asf_table tbody tr td:nth-child(4)')
     .style('background-color', function() {
       var cellValue = d3.select(this).text();
       return (freqScale(cellValue))
     })
   //set colors for homz freq
-  d3.selectAll('#DataTables_Table_0 tbody tr td:nth-child(5)')
+  d3.selectAll('#asf_table tbody tr td:nth-child(5)')
     .style('background-color', function() {
       var cellValue = d3.select(this).text();
       return (homzScale(cellValue))
@@ -144,6 +144,7 @@ shinyServer(function(input, output, session) {
 ########################################################################################################################
   # asf table
   output$asf_table <- renderDataTable({
+    
     data <- dataInput()
     if (is.null(data))
       return(NULL) 
@@ -155,7 +156,7 @@ shinyServer(function(input, output, session) {
       maxFreq = max(table$allele.freq) #Figure out how to get this onto the page. 
       table
     }
-  })
+  }, options = list(orderClasses = TRUE, class = "BLAHHH"))
 
 ########################################################################################################################
 
