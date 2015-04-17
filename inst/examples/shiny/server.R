@@ -40,7 +40,7 @@ window.setInterval(function() {
 freqTableVals = []
 homzTableVals = []
 //Grab the allele freq column's max and mins
-  d3.selectAll('#DataTables_Table_0 tbody tr td:nth-child(4)')
+  d3.selectAll('#asf_table tbody tr td:nth-child(4)')
 .each(function() {
 var cellValue = d3.select(this).text();
 freqTableVals.push(parseFloat(cellValue))
@@ -50,7 +50,7 @@ freqColorRange = d3.extent(freqTableVals)
 freqScale.domain(domainGen(freqColorRange))
 
 //grab the homz column's max and mins
-  d3.selectAll('#DataTables_Table_0 tbody tr td:nth-child(5)')
+  d3.selectAll('#asf_table tbody tr td:nth-child(5)')
 .each(function() {
 var cellValue = d3.select(this).text();
 homzTableVals.push(parseFloat(cellValue))
