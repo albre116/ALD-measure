@@ -164,17 +164,28 @@ shinyServer(function(input, output, session) {
 ########################################################################################################################
   # asf table
   output$asf_table <- renderDataTable({
-    
     data <- dataInput()
     if (is.null(data))
-      return(NULL) 
+      return(NULL)
     else {
-      bi.data <- get_bilocus_data(data, 1, 2)
-      bi.data$locus1 = as.character(bi.data$locus1)
-      bi.data$locus2 = as.character(bi.data$locus2)
-      table = compute.AShomz(bi.data, sort.var=c("focal","allele.freq"), sort.asc=c(F,F), tolerance=input$tol)
-      maxFreq = max(table$allele.freq) #Figure out how to get this onto the page. 
-      table
+      data.type2 <- TRUE
+      names.type2 <- c("locus1", "locus2", "allele1", "allele2", "haplo.freq")
+      check.names <- names.type2 %in% names(data)    
+      if (sum(!check.names) > 0) data.type2 <- FALSE
+      if (data.type2){
+        loci <- c( unique(as.character(data$locus1)), unique(as.character(data$locus2)) )
+        bi.data <- data[data$locus1==loci[1] & data$locus2==loci[2],]
+        bi.data$locus1 <- as.character(bi.data$locus1)
+        bi.data$locus2 <- as.character(bi.data$locus2)
+        table <- compute.AShomz(bi.data, sort.var=c("focal","allele.freq"), sort.asc=c(F,F), tolerance=input$tol)
+      } else {
+        bi.data <- get_bilocus_data(data, 1, 2)
+        bi.data$locus1 <- as.character(bi.data$locus1)
+        bi.data$locus2 <- as.character(bi.data$locus2)
+        table <- compute.AShomz(bi.data, sort.var=c("focal","allele.freq"), sort.asc=c(F,F), tolerance=input$tol)
+        maxFreq <- max(table$allele.freq) #Figure out how to get this onto the page. 
+      }
+      table       
     }
   }, options = list(orderClasses = TRUE, class = "BLAHHH"))
 
