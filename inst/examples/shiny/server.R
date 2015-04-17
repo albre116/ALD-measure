@@ -132,17 +132,30 @@ shinyServer(function(input, output, session) {
   })
   
   # display statistic definitions above plotData
-  output$text_ALDdata <- renderText({
-    paste("F.1    Homozygosity (expected under HWP) for locus 1", 
-          "F.1.2  Conditional homozygosity* for locus1 given locus2",
-          "F.2    Homozygosity (expected under HWP) for locus 1",
-          "F.2.1    Conditional homozygosity* for locus2 given locus1",
-          "ALD.1.2  Asymmetric LD for locus1 given locus2", 
-          "ALD.2.1  Asymmetric LD for locus2 given locus1", sep="\n")
-  })  
+  output$text_ALDdata1 <- renderText({ paste("F.1     Homozygosity (expected under HWP) for locus 1") })
+  output$text_ALDdata2 <- renderText({ paste("F.2     Homozygosity (expected under HWP) for locus 1") })
+  output$text_ALDdata3 <- renderText({ paste("F.1.2   Conditional homozygosity for locus1 given locus2") })
+  output$text_ALDdata4 <- renderText({ paste("F.2.1   Conditional homozygosity for locus2 given locus1") })
+  output$text_ALDdata5 <- renderText({ paste("ALD.1.2 Asymmetric LD for locus1 given locus2") })
+  output$text_ALDdata6 <- renderText({ paste("ALD.2.1 Asymmetric LD for locus2 given locus1") }) 
   # display plotData
   output$plot_data <- renderDataTable({
     plotData()
+  })
+
+  output$choose_locus_pair <- renderUI({
+    data <- plotData()
+    data$locus <- paste(data$locus1, data$locus2, sep="-")
+    loci <- data$locus
+    selectInput("selected_pair", "Choose a locus pair:", as.list(loci)) 
+  })  
+  output$choose_locus <- renderUI({
+    if (is.null(plotData()))
+      return(NULL)
+    else {
+      loci <- unlist(strsplit(input$selected_pair,"-"))
+      selectInput("selected_locus", "Choose the focal locus:", as.list(loci)) 
+    }
   })
   
   # plot of asymetric LD      
@@ -154,7 +167,7 @@ shinyServer(function(input, output, session) {
       loci <- unique(c(as.character(data$locus1),as.character(data$locus2)))
       ld.matrix.plot.2vars(dat=data, 
                            ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci,
-                           ld.labnames=c("ALD","ALD"), bw=T, xlab.shift=1, ylab.shift=-0, 
+                           ld.labnames=c("",""), bw=T, xlab.shift=1, ylab.shift=-0, 
                            values=input$values)
       title(sub=paste("Asymmetric LD\n row gene conditional on
       column gene"),font.sub=2,cex.sub=1.2)            
@@ -173,19 +186,23 @@ shinyServer(function(input, output, session) {
       check.names <- names.type2 %in% names(data)    
       if (sum(!check.names) > 0) data.type2 <- FALSE
       if (data.type2){
-        loci <- c( unique(as.character(data$locus1)), unique(as.character(data$locus2)) )
+       #loci <- c( unique(as.character(data$locus1)), unique(as.character(data$locus2)) )
+       #bi.data <- data[data$locus1==loci[1] & data$locus2==loci[2],]
+        loci <- unlist(strsplit(input$selected_pair,"-"))
         bi.data <- data[data$locus1==loci[1] & data$locus2==loci[2],]
         bi.data$locus1 <- as.character(bi.data$locus1)
         bi.data$locus2 <- as.character(bi.data$locus2)
         table <- compute.AShomz(bi.data, sort.var=c("focal","allele.freq"), sort.asc=c(F,F), tolerance=input$tol)
       } else {
-        bi.data <- get_bilocus_data(data, 1, 2)
+        loci <- unlist(strsplit(input$selected_pair,"-"))
+        loci.no <- (1:length(names(data)))[names(data) %in% loci]
+        bi.data <- get_bilocus_data(data, loci.no[1], loci.no[2])
         bi.data$locus1 <- as.character(bi.data$locus1)
         bi.data$locus2 <- as.character(bi.data$locus2)
         table <- compute.AShomz(bi.data, sort.var=c("focal","allele.freq"), sort.asc=c(F,F), tolerance=input$tol)
         maxFreq <- max(table$allele.freq) #Figure out how to get this onto the page. 
       }
-      table       
+      table[table$focal==input$selected_locus,]       
     }
   }, options = list(orderClasses = TRUE, class = "BLAHHH"))
 
