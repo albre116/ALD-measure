@@ -21,7 +21,10 @@ shinyUI(fluidPage(
     ),
 
     mainPanel(
-      tags$head(tags$script(src="d3.js")),
+      tags$head(
+        tags$script(src="d3.js"),
+        tags$script(src="lodash.js")
+        ),
       tabsetPanel(type = "tabs", 
         tabPanel("ALD Plot", plotOutput('heatmap')), 
         tabPanel("Allele Specific Homozygosity Table", uiOutput("asf_display")),
