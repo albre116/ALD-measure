@@ -8,6 +8,11 @@ shinyUI(fluidPage(
         accept=c('text/csv', 
           'text/comma-separated-values,text/plain', 
           '.csv')),
+      
+      tags$p("Need to see file formats?"),
+      tags$a(href="shiny.rstudio.com/tutorial", "Click Here!"),
+      tags$hr(),
+      
      #checkboxInput('header', 'Header', TRUE),      
       radioButtons('sep', 'Separator', c(Comma=',', Semicolon=';', Tab='\t'), ','),
       numericInput('tol', label = "tolerance (for sum of haplo.freqs)", value = 0.01, min = 0.01, max = 0.1, step = 0.01),
