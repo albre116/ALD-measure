@@ -1,4 +1,4 @@
-#devtools::install_github("vpaunic/ALD-Measure")
+#devtools::install_github("rsingle/ALD-Measure")
 library(shiny)
 library(asymLD)
 
@@ -168,13 +168,30 @@ shinyServer(function(input, output, session) {
       return(NULL)
     else {
       loci <- unique(c(as.character(data$locus1),as.character(data$locus2)))
-      ld.matrix.plot.2vars(dat=data, 
-                           ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci,
-                           ld.labnames=c("",""), bw=T, xlab.shift=1, ylab.shift=-0, 
-                           values=input$values)
-      title(sub=paste("Asymmetric LD\n row gene conditional on
-      column gene"),font.sub=2,cex.sub=1.2)            
+      if (input$plot.type == "fields") {  
+        ld.matrix.plot.2vars(dat=data, 
+                             ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci,
+                             ld.labnames=c("",""), bw=T, xlab.shift=1, ylab.shift=-0, 
+                             values=input$values)
+        title(sub=paste("Asymmetric LD\n row gene conditional on column gene"),font.sub=2,cex.sub=1.2) 
+      }
+      
+      if (input$plot.type == "plotrix") {
+        data.matrix <- ld.dataframe2matrix(dat=data, ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci)
+        incr.outer.marg <- par( mar=c(5.1,5,5,2)+.1 ) #c(bottom, left, top, right) default: c(5, 4, 4, 2) + 0.1
+        if (input$values) values <- 3
+          else values <- FALSE
+        plotrix::color2D.matplot(data.matrix,
+                                 show.values = values, axes = FALSE,
+                                 xlab = "", ylab = "", vcex = 1, vcol = NA,
+                                 extremes = c("white", "black"))
+        axis(3, at = seq_len(ncol(data.matrix)) - 0.5, labels = colnames(data.matrix), tick = FALSE, cex.axis = 1, las = 2)
+        axis(2, at = seq_len(nrow(data.matrix)) -0.5, labels = rev(rownames(data.matrix)), tick = FALSE, las = 2, cex.axis = 1)
+        title(sub=paste("Asymmetric LD\n row gene conditional on column gene",sep=""),font.sub=2,cex.sub=1.2)
+        par(incr.outer.marg)
+      }
     }
+    
   })
   
 ########################################################################################################################
@@ -370,7 +387,67 @@ shinyServer(function(input, output, session) {
     }
     return(z)
   }
-  
+
+  # ---------------------------------------------------------------------------
+  # Function to create a matrix of ALD values for plotting with plotrix::color2D.matplot()
+  # ---------------------------------------------------------------------------
+  ld.dataframe2matrix <- function(dat, ld.varnames, map.order) 
+  {
+    # swap order of locus1 & locus2 in cases where they are not listed in map.order with locus1 coming before locus2
+    dat <- dat[dat$locus1 %in% map.order & dat$locus2 %in% map.order,]
+    dat$locus1 <- factor(dat$locus1, levels=map.order)
+    dat$locus2 <- factor(dat$locus2, levels=map.order)
+    dat$swap <- rep(0,dim(dat)[1]) 
+    dat$swap[as.numeric(dat$locus1) > as.numeric(dat$locus2)] <- 1
+    dat$swap.locus1 <- dat$locus1
+    dat$locus1[dat$swap==1] <- dat$locus2[dat$swap==1]
+    dat$locus2[dat$swap==1] <- dat$swap.locus1[dat$swap==1]  
+    
+    # make local copies of the vars on the dataframe to use from now on
+    pval.color1 <- dat[,names(dat)==ld.varnames[1]]
+    pval.color2 <- dat[,names(dat)==ld.varnames[2]]
+    locus1 <- dat$locus1
+    locus2 <- dat$locus2
+    n.loci <- length(map.order)
+    loci <- 1:n.loci
+    names(loci) <- map.order
+    x <- 1:n.loci
+    y <- 1:n.loci
+    names(x) <- map.order
+    names(y) <- map.order
+    z <- outer(x, y, FUN="+") #set up a matrix w/ rownames & colnames = loci.ordered
+    for (i in 1:(n.loci-1)) 
+    {
+      for (j in i:(n.loci))
+      {
+        if (i == j) 
+        {
+          z[i,j] <- NA # a value outside of the zlim range for the diagonal
+        } else 
+        {
+          # ld.varnames[1] on the upper triangle
+          if (sum(locus1==names(x)[i] & locus2==names(y)[j]) > 0)  
+          {
+            z[i,j] <- pval.color1[locus1==names(x)[i] & locus2==names(y)[j]] #1st entry from pval.color1
+          } else
+          {
+            z[i,j] <- NA
+          }
+          # ld.varnames[2] on the lower triangle
+          if (sum(locus1==names(x)[i] & locus2==names(y)[j]) > 0)  
+          {
+            z[j,i] <- pval.color2[locus1==names(x)[i] & locus2==names(y)[j]] #2nd entry from pval.color2
+          } else
+          {
+            z[j,i] <- NA
+          }
+        }  
+      }
+    }
+    z[n.loci,n.loci] <- NA #take care of bottom right element
+    return(z)
+  }
+
   
   })
 
