@@ -331,7 +331,8 @@ shinyServer(function(input, output, session) {
     
     # Add a light grid with dashed lines
     # NB: abline() must be called before mtext() and axis()
-    abline(h=0.5:(max(y)+.5),v=0.5:(max(x)+.5),lty=2,col=gray(.3))
+    # abline(h=0.5:(max(y)+.5),v=0.5:(max(x)+.5),lty=2,col=gray(.3))
+    abline(h=0.5:(max(y)+.5),v=0.5:(max(x)+.5),lty=1,col="black")
     
     
     # add 1st var name as a text string rotated 90 degrees on the right margin
