@@ -14,6 +14,8 @@ shinyUI(fluidPage(
       tags$hr(),
       tags$h4("ALD Plot options"),
       checkboxInput('values', 'Show ALD values', TRUE),
+      uiOutput('choose_locus1'),      #input$ var: selected_locus1
+      uiOutput('choose_locus2'),      #input$ var: selected_locus2     
       radioButtons('plot.type', 'Plot type', c(Fields='fields', Plotrix='plotrix'), 'fields'),
       tags$hr(),
       tags$h4("Allele Specific Homozygosity options"),

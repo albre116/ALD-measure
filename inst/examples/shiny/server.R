@@ -160,6 +160,25 @@ shinyServer(function(input, output, session) {
       selectInput("selected_locus", "Choose the focal locus:", as.list(loci)) 
     }
   })
+
+  output$choose_locus1 <- renderUI({
+    if (is.null(plotData()))
+      return(NULL)
+    else {
+      data <- plotData()
+      loci <- unique(c(as.character(data$locus1),as.character(data$locus2)))
+      selectInput("selected_locus1", "Zoom: Choose the 1st locus:", as.list(loci)) 
+    }
+  })
+  output$choose_locus2 <- renderUI({
+    if (is.null(plotData()))
+      return(NULL)
+    else {
+      data <- plotData()
+      loci <- unique(c(as.character(data$locus1),as.character(data$locus2)))
+      selectInput("selected_locus2", "Zoom: Choose the 2nd locus:", as.list(loci)) 
+    }
+  })
   
   # plot of asymetric LD      
   output$heatmap <- renderPlot({      
@@ -167,17 +186,20 @@ shinyServer(function(input, output, session) {
     if (is.null(data))
       return(NULL)
     else {
+      if (is.null(input$selected_locus1)) print("waiting ...")
       loci <- unique(c(as.character(data$locus1),as.character(data$locus2)))
+      loci.no <- (1:length(loci))[loci %in% c(input$selected_locus1,input$selected_locus2)]
+      loci.subset <- loci[(loci.no[1]):(loci.no[2])]
       if (input$plot.type == "fields") {  
         ld.matrix.plot.2vars(dat=data, 
-                             ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci,
+                             ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci.subset,
                              ld.labnames=c("",""), bw=T, xlab.shift=1, ylab.shift=-0, 
                              values=input$values)
         title(sub=paste("Asymmetric LD\n row gene conditional on column gene"),font.sub=2,cex.sub=1.2) 
       }
       
       if (input$plot.type == "plotrix") {
-        data.matrix <- ld.dataframe2matrix(dat=data, ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci)
+        data.matrix <- ld.dataframe2matrix(dat=data, ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci.subset)
         incr.outer.marg <- par( mar=c(5.1,5,5,2)+.1 ) #c(bottom, left, top, right) default: c(5, 4, 4, 2) + 0.1
         if (input$values) values <- 3
           else values <- FALSE
@@ -349,6 +371,7 @@ shinyServer(function(input, output, session) {
     # Add a light grid with dashed lines
     # NB: abline() must be called before mtext() and axis()
     abline(h=0.5:(max(y)+.5),v=0.5:(max(x)+.5),lty=2,col=gray(.3))
+    abline(h=0.5:(max(y)+.5),v=0.5:(max(x)+.5),lty=1,col="black")
     
     
     # add 1st var name as a text string rotated 90 degrees on the right margin
