@@ -173,14 +173,16 @@ shinyServer(function(input, output, session) {
     }
   })
   output$choose_locus2 <- renderUI({
-    if (is.null(plotData())) #(is.null(input$selected_locus1)) 
+    if (is.null(input$selected_locus1)) #(is.null(plotData())) gives error for loci.subset <- loci[(locus1.no + 1):length(loci)]
       return(NULL)
     else {
       data <- plotData()
       loci <- unique(c(as.character(data$locus1),as.character(data$locus2)))
       locus1.no <- (1:length(loci))[loci == input$selected_locus1]
-      loci.subset <- loci[(locus1.no + 1):length(loci)]
-      selectInput("selected_locus2", "Zoom: Choose the 2nd locus:", as.list(loci.subset), selected=loci[locus1.no + 1]) 
+      if (length(loci) <= 25) locus2.no.default <- length(loci)
+        else locus2.no.default <- locus1.no + min(25-1, length(loci)-locus1.no)
+      loci.subset <- loci[(locus1.no + 1):locus2.no.default] #loci.subset <- loci[(locus1.no + 1):length(loci)]
+      selectInput("selected_locus2", "Zoom: Choose the 2nd locus:", as.list(loci.subset), selected=loci[locus2.no.default]) 
     }
   })
   
@@ -190,7 +192,6 @@ shinyServer(function(input, output, session) {
     if (is.null(data))
       return(NULL)
     else {
-      if (is.null(input$selected_locus1)) print("waiting ...")
       loci <- unique(c(as.character(data$locus1),as.character(data$locus2)))
       loci.no <- (1:length(loci))[loci %in% c(input$selected_locus1,input$selected_locus2)]
       loci.subset <- loci[(loci.no[1]):(loci.no[2])]
