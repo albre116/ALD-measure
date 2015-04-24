@@ -169,16 +169,18 @@ shinyServer(function(input, output, session) {
     else {
       data <- plotData()
       loci <- unique(c(as.character(data$locus1),as.character(data$locus2)))
-      selectInput("selected_locus1", "Zoom: Choose the 1st locus:", as.list(loci)) 
+      selectInput("selected_locus1", "Zoom: Choose the 1st locus:", as.list(loci[-length(loci)])) 
     }
   })
   output$choose_locus2 <- renderUI({
-    if (is.null(plotData()))
+    if (is.null(plotData())) #(is.null(input$selected_locus1)) 
       return(NULL)
     else {
       data <- plotData()
       loci <- unique(c(as.character(data$locus1),as.character(data$locus2)))
-      selectInput("selected_locus2", "Zoom: Choose the 2nd locus:", as.list(loci)) 
+      locus1.no <- (1:length(loci))[loci == input$selected_locus1]
+      loci.subset <- loci[(locus1.no + 1):length(loci)]
+      selectInput("selected_locus2", "Zoom: Choose the 2nd locus:", as.list(loci.subset), selected=loci[locus1.no + 1]) 
     }
   })
   
@@ -193,10 +195,16 @@ shinyServer(function(input, output, session) {
       loci.no <- (1:length(loci))[loci %in% c(input$selected_locus1,input$selected_locus2)]
       loci.subset <- loci[(loci.no[1]):(loci.no[2])]
       if (input$plot.type == "fields") {  
-        ld.matrix.plot.2vars(dat=data, 
-                             ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci.subset,
-                             ld.labnames=c("",""), bw=T, xlab.shift=1, ylab.shift=-0, 
-                             values=input$values)
+        data.matrix <- ld.dataframe2matrix(dat=data, ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci.subset)
+        ld.matrix.plot.2vars.v2(dat=data.matrix, 
+                               ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci.subset,
+                               ld.labnames=c("",""), bw=T, xlab.shift=1, ylab.shift=-0, 
+                               values=input$values)
+        
+        #ld.matrix.plot.2vars(dat=data, 
+        #                     ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci.subset,
+        #                     ld.labnames=c("",""), bw=T, xlab.shift=1, ylab.shift=-0, 
+        #                     values=input$values)
         title(sub=paste("Asymmetric LD\n row gene conditional on column gene"),font.sub=2,cex.sub=1.2) 
       }
       
@@ -471,6 +479,77 @@ shinyServer(function(input, output, session) {
     }
     z[n.loci,n.loci] <- NA #take care of bottom right element
     return(z)
+  }
+
+  # ---------------------------------------------------------------------------
+  # Function for plotting the ALD heatmap (with matrix input)
+  # ---------------------------------------------------------------------------
+  ld.matrix.plot.2vars.v2 <- function(dat, ld.varnames, map.order, 
+                                   ld.labnames=ld.varnames, bw=FALSE, xlab.shift=1, ylab.shift=-5, values=FALSE, cex.ld=.9) {
+        
+    n.loci <- length(map.order)
+    loci <- 1:length(map.order)
+    names(loci) <- map.order
+    
+    z <- dat
+    zz <- NULL
+    for (i in (n.loci):1) zz <- cbind(zz, z[i,]) # rotate matrix z by +90 degrees
+    
+    x <- 1:n.loci
+    y <- 1:n.loci
+    names(x) <- map.order
+    names(y) <- map.order
+    
+    # plot the LD values
+    z.lim <- c(0,1) #zlim: plot only considers values between these 2 values
+    stat.breaks <- c(0,.1,.2,.3,.4,.5,.6,.7,.8,.9,1)
+    if (bw)  stat.colors <- rev(gray((0:(length(stat.breaks)-2))/(length(stat.breaks)-2)))
+    if (!bw) stat.colors <- c("gray",rev(rainbow((length(stat.breaks)-1)))[-(length(stat.breaks)-10)])
+    # zlim: only use colors in this range
+    fields::image.plot(x,y,zz,xaxt="n",yaxt="n",axes=F,xlab="",ylab="",zlim=z.lim,
+                       horizontal=F,col=stat.colors,breaks=stat.breaks) 
+    
+    # Add a light grid with dashed lines
+    # NB: abline() must be called before mtext() and axis()
+    abline(h=0.5:(max(y)+.5),v=0.5:(max(x)+.5),lty=2,col=gray(.3))
+    abline(h=0.5:(max(y)+.5),v=0.5:(max(x)+.5),lty=1,col="black")
+    
+    
+    # add 1st var name as a text string rotated 90 degrees on the right margin
+    mtext(side=4,ld.labnames[1],srt=90,font=2,line=ylab.shift) 
+    # add 2nd var name as a text string on the bottom margin
+    mtext(side=1,ld.labnames[2], font=2,line=xlab.shift) 
+    
+    # Add axes with locus names  
+    axis(3, at=x, labels=names(x), tick=F,las=2)
+    axis(2, at=y, labels=rev(names(y)), tick=F,las=2) # rev() since rotated matrix 90 degrees 
+    
+    
+    if (values)
+    {
+      for (x in 1:n.loci)
+      {
+        for (y in n.loci:1)
+        {
+          if (x != (n.loci-y+1))
+          {
+            yyz <- as.character(round(zz[x,y],2))
+            if (!is.na(zz[x,y]))
+            {
+              if (nchar(as.character(yyz))==3) yyz <- paste(as.character(yyz),"0",sep="")
+              yyz <- substr(yyz,2,4)
+              if (zz[x,y]>.5 & bw==T)
+                # font=2 for bold, NB: cex was 1.2
+                text(x,y,yyz,cex=cex.ld,col="white",font=1) 
+              else 
+                # font=2 for bold, NB: cex was 1.2
+                text(x,y,yyz,cex=cex.ld,col="black",font=1) 
+            }
+          }
+        }
+      }
+    }
+    #return(z)
   }
 
   
