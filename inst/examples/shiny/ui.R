@@ -49,6 +49,10 @@ shinyUI(navbarPage("Asymmetric LD (ALD)",
         uiOutput('choose_locus')       #input$ var: selected_locus
       ),
       mainPanel(
+        tags$head(
+          tags$script(src="d3.js"),
+          tags$script(src="lodash.js")
+        ),
         uiOutput("asf_display")
       )
     )
