@@ -29,12 +29,7 @@ shinyUI(fluidPage(
         tabPanel("ALD Plot", plotOutput('heatmap')), 
         tabPanel("Allele Specific Homozygosity Table", uiOutput("asf_display")),
         tabPanel("ALD Table", 
-                 textOutput("text_ALDdata1"),
-                 textOutput("text_ALDdata2"),
-                 textOutput("text_ALDdata3"),
-                 textOutput("text_ALDdata4"),
-                 textOutput("text_ALDdata5"),
-                 textOutput("text_ALDdata6"),
+                 htmlOutput("text_ALDdata1"),
                  dataTableOutput('plot_data')),
         tabPanel("raw Data", dataTableOutput('raw_data'))
       )
