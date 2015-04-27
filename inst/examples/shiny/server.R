@@ -197,6 +197,7 @@ shinyServer(function(input, output, session) {
       loci.subset <- loci[(loci.no[1]):(loci.no[2])]
       if (input$plot.type == "fields") {  
         data.matrix <- ld.dataframe2matrix(dat=data, ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci.subset)
+        incr.outer.marg <- par( mar=c(5.0,5.4,5.4,2)+.1 ) #c(bottom, left, top, right) default: c(5, 4, 4, 2) + 0.1
         ld.matrix.plot.2vars.v2(dat=data.matrix, 
                                ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci.subset,
                                ld.labnames=c("",""), bw=T, xlab.shift=1, ylab.shift=-0, 
@@ -207,6 +208,7 @@ shinyServer(function(input, output, session) {
         #                     ld.labnames=c("",""), bw=T, xlab.shift=1, ylab.shift=-0, 
         #                     values=input$values)
         title(sub=paste("Asymmetric LD\n row gene conditional on column gene"),font.sub=2,cex.sub=1.2) 
+        par(incr.outer.marg)
       }
       
       if (input$plot.type == "plotrix") {
