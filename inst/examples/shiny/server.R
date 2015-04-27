@@ -193,7 +193,8 @@ shinyServer(function(input, output, session) {
       return(NULL)
     else {
       loci <- unique(c(as.character(data$locus1),as.character(data$locus2)))
-      loci.no <- (1:length(loci))[loci %in% c(input$selected_locus1,input$selected_locus2)]
+      if (is.null(input$selected_locus2)) loci.no <- 1:2
+        else loci.no <- (1:length(loci))[loci %in% c(input$selected_locus1,input$selected_locus2)]
       loci.subset <- loci[(loci.no[1]):(loci.no[2])]
       if (input$plot.type == "fields") {  
         data.matrix <- ld.dataframe2matrix(dat=data, ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci.subset)
