@@ -135,12 +135,15 @@ shinyServer(function(input, output, session) {
   })
   
   # display statistic definitions above plotData
-  output$text_ALDdata1 <- renderText({ paste("F.1     Homozygosity (expected under HWP) for locus 1") })
-  output$text_ALDdata2 <- renderText({ paste("F.2     Homozygosity (expected under HWP) for locus 1") })
-  output$text_ALDdata3 <- renderText({ paste("F.1.2   Conditional homozygosity for locus1 given locus2") })
-  output$text_ALDdata4 <- renderText({ paste("F.2.1   Conditional homozygosity for locus2 given locus1") })
-  output$text_ALDdata5 <- renderText({ paste("ALD.1.2 Asymmetric LD for locus1 given locus2") })
-  output$text_ALDdata6 <- renderText({ paste("ALD.2.1 Asymmetric LD for locus2 given locus1") }) 
+  output$text_ALDdata1 <- renderText({ paste(pre(
+    "F.1     Homozygosity (expected under HWP) for locus 1",
+    "F.2     Homozygosity (expected under HWP) for locus 2",
+    "F.1.2   Conditional homozygosity for locus1 given locus2",
+    "F.2.1   Conditional homozygosity for locus2 given locus1",
+    "ALD.1.2 Asymmetric LD for locus1 given locus2",
+    "ALD.2.1 Asymmetric LD for locus2 given locus1"
+    )) })
+  
   # display plotData
   output$plot_data <- renderDataTable({
     plotData()
