@@ -94,17 +94,38 @@ shinyServer(function(input, output, session) {
     data <- read.csv(inFile$datapath, header=TRUE, sep=input$sep)
     # remove haplotypes with freq == 0 
     rm.inds <- data[, dim(data)[2]] == 0
-    data <- data[!rm.inds, ]      
+    data <- data[!rm.inds, ]  
   })
+
+  dataInput2 <- reactive({
+    data <- dataInput()
+    data.type2 <- TRUE
+    names.type2 <- c("locus1", "locus2", "allele1", "allele2", "haplo.freq")
+    check.names <- names.type2 %in% names(data)    
+    if (sum(!check.names) > 0) data.type2 <- FALSE
+    if (data.type2){
+      
+    } else {
+      sum.freqs <- sum(data[, dim(data)[2]])
+      if ( sum.freqs < 1 - input$tol) {
+        output$text_rawdata1 <- renderText({ paste("Sum of haplo.freqs < 1, increase tolerance value", sum.freqs) })
+        return(NULL)
+      }
+      else {
+        output$text_rawdata1 <- renderText({ paste("Sum of haplo.freqs + tolerance >= 1", sum.freqs) })
+        return(data)        
+      }
+    }    
+  })  
   
   # display data
   output$raw_data <- renderDataTable({
-    dataInput()
+    dataInput2()
   })
    
   # prepare the data for plotting function
   plotData <- reactive({
-    data <- dataInput()
+    data <- dataInput2()
     if (is.null(data))
       return(NULL)
     else {
@@ -142,7 +163,8 @@ shinyServer(function(input, output, session) {
     "F.2.1   Conditional homozygosity for locus2 given locus1",
     "ALD.1.2 Asymmetric LD for locus1 given locus2",
     "ALD.2.1 Asymmetric LD for locus2 given locus1"
-    )) })
+    )) 
+  })
   
   # display plotData
   output$plot_data <- renderDataTable({
@@ -183,7 +205,7 @@ shinyServer(function(input, output, session) {
 ########################################################################################################################
   # asf table
   output$asf_table <- renderDataTable({
-    data <- dataInput()
+    data <- dataInput2()
     if (is.null(data))
       return(NULL)
     else {
