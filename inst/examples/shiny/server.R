@@ -191,7 +191,16 @@ shinyServer(function(input, output, session) {
     if (is.null(plotData()))
       return(NULL)
     else {
-      loci <- unlist(strsplit(input$selected_pair,"-"))
+      loci <- tryCatch({
+        unlist(strsplit(input$selected_pair,"-"))
+      }, warning = function(w) {
+        #nothing
+      }, error = function(e) {
+        #nothing
+      }, finally = {
+        #all good
+      }                
+                        )
       selectInput("selected_locus", "Choose the focal locus:", as.list(loci)) 
     }
   })
