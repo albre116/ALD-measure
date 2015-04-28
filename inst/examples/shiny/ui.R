@@ -12,30 +12,23 @@ shinyUI(navbarPage("Asymmetric LD (ALD)",
 
         radioButtons('sep', 'Separator', c(Comma=',', Semicolon=';', Tab='\t'), ','),
         numericInput('tol', label = "tolerance (for sum of haplo.freqs)", value = 0.01, min = 0.01, max = 0.1, step = 0.01),
-        tags$p("(sum of haplo.freqs + tolerance) must be >= 1")
+       #tags$hr(),
+        tags$p("__________________________"),
+        tags$h4("ALD plot options"),
+        checkboxInput('values', 'Show ALD values', TRUE)
       ),
       mainPanel(
         titlePanel("Asymmetric Linkage Disequilibrium (ALD)"),
-        helpText("Note: something about tolerance ..."),
+        tags$hr(),
+        helpText("NOTE: the sum of hapltoype frequencies needs to be within +/- tolerance of 1.0."),
+        helpText("If the sum is not within this range, you must increase the tolerance value."),
         textOutput("text_rawdata1"),
-        
-        dataTableOutput('raw_data')
+        tags$hr(),
+        plotOutput('heatmap')
       )
     )
   ),
 
-  tabPanel("ALD Plot", 
-    sidebarLayout( 
-     sidebarPanel(
-       tags$h4("ALD plot options"),
-       checkboxInput('values', 'Show ALD values', TRUE)
-     ),
-     mainPanel(
-       plotOutput('heatmap')
-     )
-    )
-  ),
-  
   tabPanel("ALD Table", 
            htmlOutput("text_ALDdata1"),
            dataTableOutput('plot_data')
@@ -56,7 +49,13 @@ shinyUI(navbarPage("Asymmetric LD (ALD)",
         uiOutput("asf_display")
       )
     )
+  ),
+
+  tabPanel("Raw Data", 
+           dataTableOutput('raw_data')
   )
+
+
 ))
 
   
