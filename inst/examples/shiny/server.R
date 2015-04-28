@@ -104,15 +104,25 @@ shinyServer(function(input, output, session) {
     check.names <- names.type2 %in% names(data)    
     if (sum(!check.names) > 0) data.type2 <- FALSE
     if (data.type2){
-      
-    } else {
-      sum.freqs <- sum(data[, dim(data)[2]])
-      if ( sum.freqs < 1 - input$tol) {
-        output$text_rawdata1 <- renderText({ paste("Sum of haplo.freqs < 1, increase tolerance value", sum.freqs) })
+      data$locus <- paste(data$locus1, data$locus2, sep="-")
+      min.hf.sum <- min( aggregate(data$haplo.freq, by=list(data$locus), FUN=sum)[,2] )
+      if ( min.hf.sum < 1 - input$tol) {
+        output$text_rawdata1 <- renderText({ paste("Sum of haplo.freqs (min over locus pairs) = ", min.hf.sum) })
         return(NULL)
       }
       else {
-        output$text_rawdata1 <- renderText({ paste("Sum of haplo.freqs + tolerance >= 1", sum.freqs) })
+        output$text_rawdata1 <- renderText({ paste("Sum of haplo.freqs (min over locus pairs) = ", min.hf.sum) })
+        return(data)        
+      }       
+    } else {
+      sum.freqs <- sum(data[, dim(data)[2]])
+      if ( sum.freqs < 1 - input$tol) {
+        if ( sum.freqs == 0) output$text_rawdata1 <- renderText({ paste("Sum of haplo.freqs = ", sum.freqs) })
+          else               output$text_rawdata1 <- renderText({ paste("Sum of haplo.freqs = ", sum.freqs, "(adjust tolerance value)") })
+        return(NULL)
+      }
+      else {
+        output$text_rawdata1 <- renderText({ paste("Sum of haplo.freqs = ", sum.freqs) })
         return(data)        
       }
     }    
