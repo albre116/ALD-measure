@@ -103,6 +103,10 @@ shinyServer(function(input, output, session) {
     names.type2 <- c("locus1", "locus2", "allele1", "allele2", "haplo.freq")
     check.names <- names.type2 %in% names(data)    
     if (sum(!check.names) > 0) data.type2 <- FALSE
+    if (is.null(data))
+      return(NULL)
+    else {
+
     if (data.type2){
       data$locus <- paste(data$locus1, data$locus2, sep="-")
       min.hf.sum <- min( aggregate(data$haplo.freq, by=list(data$locus), FUN=sum)[,2] )
@@ -125,7 +129,8 @@ shinyServer(function(input, output, session) {
         output$text_rawdata1 <- renderText({ paste("Sum of haplo.freqs = ", sum.freqs) })
         return(data)        
       }
-    }    
+    } 
+  }  
   })  
   
   # display data
