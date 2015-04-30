@@ -18,11 +18,14 @@ shinyUI(navbarPage("Asymmetric LD (ALD)",
         checkboxInput('values', 'Show ALD values', TRUE)
       ),
       mainPanel(
-        titlePanel("Asymmetric Linkage Disequilibrium (ALD)"),
+       #titlePanel("Asymmetric Linkage Disequilibrium (ALD)"),
+        tags$h2(tags$img(src="ALD_small.png", width="18%"),"Asymmetric Linkage Disequilibrium"),
         tags$hr(),
         helpText("NOTE: the sum of hapltoype frequencies needs to be within +/- tolerance of 1.0."),
         helpText("If the sum is not within this range, you must increase the tolerance value."),
         textOutput("text_rawdata1"),
+       #tags$head(tags$style("#text_rawdata1{color: red;}") ),
+       #tags$img(src="ALD.png", width="50%"),
         tags$hr(),
         plotOutput('heatmap')
       )
@@ -37,7 +40,7 @@ shinyUI(navbarPage("Asymmetric LD (ALD)",
   tabPanel("Allele Specific Homozygosity Table", 
     sidebarLayout( 
       sidebarPanel(
-        tags$h4("Allele Specific Homozygosity options"),
+        tags$h4("Allele Specific Homozygosity"),
         uiOutput('choose_locus_pair'), #input$ var: selected_pair
         uiOutput('choose_locus')       #input$ var: selected_locus
       ),
