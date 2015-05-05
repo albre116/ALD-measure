@@ -38,7 +38,7 @@ shinyUI(navbarPage("Asymmetric LD (ALD)",
            dataTableOutput('plot_data')
   ),
   
-  tabPanel("Allele Specific Homozygosity Table", 
+  tabPanel("Allele Specific Homozygosity", 
     sidebarLayout( 
       sidebarPanel(
         tags$h4("Allele Specific Homozygosity"),
@@ -57,8 +57,11 @@ shinyUI(navbarPage("Asymmetric LD (ALD)",
 
   tabPanel("Raw Data", 
            dataTableOutput('raw_data')
+  ),
+  
+  tabPanel("Citation", 
+           includeMarkdown('cite.md')
   )
-
 
 ))
 
