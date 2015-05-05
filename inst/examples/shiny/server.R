@@ -104,6 +104,7 @@ shinyServer(function(input, output, session) {
    
   # prepare the data for plotting function
   plotData <- reactive({
+    withProgress(message = "Computing ALD values...", value = 0, {
     data <- dataInput()
     if (is.null(data))
       return(NULL)
@@ -132,6 +133,7 @@ shinyServer(function(input, output, session) {
       }
       ald.allpairs
     }
+    })
   })
   
   # display statistic definitions above plotData
@@ -159,13 +161,22 @@ shinyServer(function(input, output, session) {
     if (is.null(plotData()))
       return(NULL)
     else {
-      loci <- unlist(strsplit(input$selected_pair,"-"))
+      loci <- tryCatch({
+        unlist(strsplit(input$selected_pair,"-"))
+      }, warning = function(w) {
+        #nothing
+      }, error = function(e) {
+        #nothing
+      }, finally = {
+        #all good
+      })
       selectInput("selected_locus", "Choose the focal locus:", as.list(loci)) 
     }
   })
   
   # plot of asymetric LD      
   output$heatmap <- renderPlot({      
+    withProgress(message = "Rendering Plot...", value = 0, {
     data <- plotData()
     if (is.null(data))
       return(NULL)
@@ -178,6 +189,7 @@ shinyServer(function(input, output, session) {
       title(sub=paste("Asymmetric LD\n row gene conditional on
       column gene"),font.sub=2,cex.sub=1.2)            
     }
+    })
   })
   
 ########################################################################################################################
