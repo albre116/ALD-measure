@@ -36,6 +36,7 @@ return [start, start + (0.33*range), start + (0.66*range), end]
 freqTableVals = [] // initialize array to store table values for color scaling.
 homzTableVals = []
 
+// NB: (_.==> lodash library)
 window.setInterval(function() {
 // freqTableVals = []
 // homzTableVals = []
