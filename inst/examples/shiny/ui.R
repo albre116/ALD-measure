@@ -8,7 +8,7 @@ shinyUI(navbarPage("Asymmetric LD (ALD)",
         fileInput('file1', 'Upload a Haplotype Frequency File',
                   accept=c('text/csv', 'text/comma-separated-values,text/plain', '.csv')),
         #checkboxInput('header', 'Header', TRUE),      
-        tags$a(href="http://www.uvm.edu/~rsingle/software/shiny_ALD/file_formats.txt", target="_blank", "Click here to see the file formats"),
+        tags$a(href="http://www.uvm.edu/~rsingle/software/ALD/file_formats.html", target="_blank", "Click here to see the file formats"),
 
         radioButtons('sep', 'Separator', c(Comma=',', Semicolon=';', Tab='\t'), ','),
         numericInput('tol', label = "tolerance (for sum of haplo.freqs)", value = 0.01, min = 0.01, max = 0.1, step = 0.01),
