@@ -241,7 +241,7 @@ shinyServer(function(input, output, session) {
 ########################################################################################################################
 # asf table
 #Calculate the table inside of a reactive function. 
-  calcTable = reactive(function(){
+  calcTable <- reactive({
     data <- dataInput2()
     if (is.null(data))
       return(NULL)
@@ -267,7 +267,8 @@ shinyServer(function(input, output, session) {
         table <- compute.AShomz(bi.data, sort.var=c("focal","allele.freq"), sort.asc=c(F,F), tolerance=input$tol)
       }
       table[table$focal==input$selected_locus,]        
-    }})
+    }
+  })
   
   maxFreq <<- 0
   output$asf_table <- renderDataTable({
