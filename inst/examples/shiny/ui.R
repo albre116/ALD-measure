@@ -23,11 +23,17 @@ shinyUI(fluidPage(
     mainPanel(
       tags$head(
         tags$script(src="d3.js"),
-        tags$script(src="lodash.js")
+        tags$script(src="lodash.js"),
+        tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
         ),
       tabsetPanel(type = "tabs", 
         tabPanel("ALD Plot", plotOutput('heatmap')), 
-        tabPanel("Allele Specific Homozygosity Table", uiOutput("asf_display")),
+        tabPanel("Allele Specific Homozygosity Table", 
+                 uiOutput("asf_display"),
+                 htmlOutput("maxVal_f"),
+                 htmlOutput("minVal_f"),
+                 htmlOutput("maxVal_h"),
+                 htmlOutput("minVal_h")),
         tabPanel("ALD Table", 
                  htmlOutput("text_ALDdata1"),
                  dataTableOutput('plot_data')),
