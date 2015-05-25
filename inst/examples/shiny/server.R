@@ -109,6 +109,7 @@ shinyServer(function(input, output, session) {
   # prepare the data for plotting function
   plotData <- reactive({
     withProgress(message = "Computing ALD values...", value = 0, {
+    #Sys.sleep(2) #useful for debugging progress bar stuff. 
     data <- dataInput()
     if (is.null(data))
       return(NULL)
