@@ -48,9 +48,14 @@ shinyUI(navbarPage("Asymmetric LD (ALD)",
       mainPanel(
         tags$head(
           tags$script(src="d3.js"),
-          tags$script(src="lodash.js")
+          tags$script(src="lodash.js"),
+          tags$link(rel = "stylesheet", type = "text/css", href = "style.css")
         ),
-        uiOutput("asf_display")
+        uiOutput("asf_display"),
+        htmlOutput("maxVal_f"),
+        htmlOutput("minVal_f"),
+        htmlOutput("maxVal_h"),
+        htmlOutput("minVal_h")        
       )
     )
   ),
