@@ -255,7 +255,7 @@ shinyServer(function(input, output, session) {
       else loci.no <- (1:length(loci))[loci %in% c(input$selected_locus1,input$selected_locus2)]
       loci.subset <- loci[(loci.no[1]):(loci.no[2])]
       
-      incr.outer.marg <- par( mar=c(4.2,5.5,5.6,1.8)+.1 ) #c(bottom, left, top, right) default: c(5, 4, 4, 2) + 0.1
+      incr.outer.marg <- par( mar=c(3.4,5.5,5.6,1.8)+.1 ) #c(bottom, left, top, right) default: c(5, 4, 4, 2) + 0.1
       ld.matrix.plot.2vars(dat=data, 
                            ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci.subset,
                            ld.labnames=c("",""), bw=T, xlab.shift=1, ylab.shift=-0, 
