@@ -46,7 +46,8 @@ shinyUI(navbarPage("Asymmetric LD (ALD)",
       sidebarPanel(
         tags$h4("Allele Specific Homozygosity"),
         uiOutput('choose_locus_pair'), #input$ var: selected_pair
-        uiOutput('choose_locus')       #input$ var: selected_locus
+        uiOutput('choose_locus'),      #input$ var: selected_locus
+        tags$h5("The focal locus defines the locus/allele conditioned upon")
       ),
       mainPanel(
         tags$head(
