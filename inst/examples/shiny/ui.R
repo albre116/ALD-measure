@@ -15,7 +15,10 @@ shinyUI(navbarPage("Asymmetric LD (ALD)",
        #tags$hr(),
         tags$p("__________________________"),
         tags$h4("ALD plot options"),
-        checkboxInput('values', 'Show ALD values', TRUE)
+        checkboxInput('values', 'Show ALD values', TRUE),
+        tags$hr(),
+        uiOutput('choose_locus1'),     #input$ var: selected_locus1
+        uiOutput('choose_locus2')      #input$ var: selected_locus2     
       ),
       mainPanel(
        #titlePanel("Asymmetric Linkage Disequilibrium (ALD)"),

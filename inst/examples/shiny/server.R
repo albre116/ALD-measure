@@ -219,6 +219,29 @@ shinyServer(function(input, output, session) {
       selectInput("selected_locus", "Choose the focal locus:", as.list(loci)) 
     }
   })
+
+  output$choose_locus1 <- renderUI({
+    if (is.null(plotData()))
+      return(NULL)
+    else {
+      data <- plotData()
+      loci <- unique(c(as.character(data$locus1),as.character(data$locus2)))
+      selectInput("selected_locus1", "Subset: Choose first locus", as.list(loci[-length(loci)])) 
+    }
+  })
+  output$choose_locus2 <- renderUI({
+    if (is.null(input$selected_locus1)) #(is.null(plotData())) gives error for loci.subset <- loci[(locus1.no + 1):length(loci)]
+      return(NULL)
+    else {
+      data <- plotData()
+      loci <- unique(c(as.character(data$locus1),as.character(data$locus2)))
+      locus1.no <- (1:length(loci))[loci == input$selected_locus1]
+      if (length(loci) <= 25) locus2.no.default <- length(loci)
+      else locus2.no.default <- locus1.no + min(25-1, length(loci)-locus1.no)
+      loci.subset <- loci[(locus1.no + 1):locus2.no.default] #loci.subset <- loci[(locus1.no + 1):length(loci)]
+      selectInput("selected_locus2", "Subset: Choose last locus", as.list(loci.subset), selected=loci[locus2.no.default]) 
+    }
+  })  
   
   # plot of asymetric LD      
   output$heatmap <- renderPlot({
@@ -228,12 +251,19 @@ shinyServer(function(input, output, session) {
       return(NULL)
     else {
       loci <- unique(c(as.character(data$locus1),as.character(data$locus2)))
+      if (is.null(input$selected_locus2)) loci.no <- 1:2
+      else loci.no <- (1:length(loci))[loci %in% c(input$selected_locus1,input$selected_locus2)]
+      loci.subset <- loci[(loci.no[1]):(loci.no[2])]
+      
+      incr.outer.marg <- par( mar=c(4.2,5.5,5.6,1.8)+.1 ) #c(bottom, left, top, right) default: c(5, 4, 4, 2) + 0.1
       ld.matrix.plot.2vars(dat=data, 
-                           ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci,
+                           ld.varnames=c("ALD.1.2","ALD.2.1"), map.order=loci.subset,
                            ld.labnames=c("",""), bw=T, xlab.shift=1, ylab.shift=-0, 
                            values=input$values)
-      title(sub=paste("Asymmetric LD\n row gene conditional on
-      column gene"),font.sub=2,cex.sub=1.2)            
+      #title(sub=paste("Asymmetric Linkage Disequilibrium\n row gene conditional on column gene"),font.sub=2,cex.sub=1.2)            
+      text.sub <- paste("Asymmetric Linkage Disequilibrium\n row gene conditional on column gene")
+      mtext(text.sub, side = 1, padj=1, font=2, cex=1.2)
+      par(incr.outer.marg)
     }
     })
   })
