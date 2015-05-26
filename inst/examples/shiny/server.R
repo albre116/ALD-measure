@@ -200,7 +200,7 @@ shinyServer(function(input, output, session) {
 ########################################################################################################################
   # asf table
 #Calculate the table inside of a reactive function. 
-calcTable = reactive(function(){
+calcTable = reactive({
   data <- dataInput()
   if (is.null(data))
     return(NULL)
@@ -228,7 +228,7 @@ calcTable = reactive(function(){
     table[table$focal==input$selected_locus,]        
 }})
 
-maxFreq <<- 0
+
   output$asf_table <- renderDataTable({
     #Run the table function inside of the renderDataTable
     #Wrapped it in a try catch because it was spilling out an error about undefined columns before finishing. 
