@@ -302,7 +302,6 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  maxFreq <<- 0
   output$asf_table <- renderDataTable({
     #Run the table function inside of the renderDataTable
     #Wrapped it in a try catch because it was spilling out an error about undefined columns before finishing. 
