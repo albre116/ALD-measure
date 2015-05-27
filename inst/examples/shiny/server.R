@@ -96,9 +96,16 @@ shinyServer(function(input, output, session) {
     if (is.null(inFile))
       return(NULL)
     data <- read.csv(inFile$datapath, header=TRUE, sep=input$sep)
-    # remove haplotypes with freq == 0 
-    rm.inds <- data[, dim(data)[2]] == 0
-    data <- data[!rm.inds, ]  
+    if (dim(data)[2]<3){
+      output$text_fileinput <- renderText({ paste("File did not load correctly - check input file and separator/delimiter") })
+      return(NULL)
+    } else {
+      output$text_fileinput <- renderText({ paste("") })
+      # remove haplotypes with freq == 0 
+      rm.inds <- data[, dim(data)[2]] == 0
+      data <- data[!rm.inds, ]  
+      return(data)
+    }
   })
 
   dataInput2 <- reactive({
