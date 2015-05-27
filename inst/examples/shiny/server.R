@@ -302,7 +302,6 @@ shinyServer(function(input, output, session) {
     }
   })
   
-  maxFreq <<- 0
   output$asf_table <- renderDataTable({
     #Run the table function inside of the renderDataTable
     #Wrapped it in a try catch because it was spilling out an error about undefined columns before finishing. 
@@ -318,10 +317,34 @@ shinyServer(function(input, output, session) {
   }, options = list(orderClasses = TRUE))
   #Write the max and min values to the html, these will later be made hidden with css, They are for the javascript to use for
   #calculating the max and min for color scales. 
-  output$maxVal_f <- renderText({ paste(max(calcTable()$allele.freq))})
-  output$minVal_f <- renderText({ paste(min(calcTable()$allele.freq))})
-  output$maxVal_h <- renderText({ paste(max(calcTable()$as.homz))})
-  output$minVal_h <- renderText({ paste(min(calcTable()$as.homz))})
+  
+getMax = function(loc){
+  tryCatch({
+    return(max(loc))
+  }, warning = function(w) {
+    #nothing
+  }, error = function(e) {
+    #nothing
+  }, finally = {
+    #all good
+  })
+}
+
+getMin = function(loc){
+  tryCatch({
+    return(min(loc))
+  }, warning = function(w) {
+    #nothing
+  }, error = function(e) {
+    #nothing
+  }, finally = {
+    #all good
+  })
+}
+  output$maxVal_f <- renderText({ paste(getMax(calcTable()$allele.freq))})
+  output$minVal_f <- renderText({ paste(getMin(calcTable()$allele.freq))})
+  output$maxVal_h <- renderText({ paste(getMax(calcTable()$as.homz))})
+  output$minVal_h <- renderText({ paste(getMin(calcTable()$as.homz))})
 
 ########################################################################################################################
 
