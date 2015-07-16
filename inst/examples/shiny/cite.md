@@ -3,7 +3,7 @@
 #### Please cite the paper below for the ALD measure.
 
 <p><p>
-[Thomson G, Single RM.](http://www.genetics.org/content/198/1/321) Conditional Asymmetric Linkage Disequilibrium (ALD): Extending the Bi-Allelic r^2 Measure. Genetics. 2014  198(1):321-331.
+Thomson G, Single RM. [Conditional Asymmetric Linkage Disequilibrium (ALD): Extending the Bi-Allelic r^2 Measure.] (http://www.genetics.org/content/198/1/321) Genetics. 2014. 198(1):321-331.
 
 **Abstract**
 

@@ -10,7 +10,7 @@ shinyUI(navbarPage("Asymmetric LD (ALD)",
         #checkboxInput('header', 'Header', TRUE),      
         tags$a(href="http://www.uvm.edu/~rsingle/software/ALD/file_formats.html", target="_blank", "Click here to see the file formats"),
 
-        radioButtons('sep', 'Separator', c(Comma=',', Semicolon=';', Tab='\t'), ','),
+        radioButtons('sep', 'Separator/Delimiter', c(Comma=',', Semicolon=';', Tab='\t'), ','),
         numericInput('tol', label = "tolerance (for sum of haplo.freqs)", value = 0.01, min = 0.01, max = 0.1, step = 0.01),
        #tags$hr(),
         tags$p("__________________________"),
@@ -29,7 +29,9 @@ shinyUI(navbarPage("Asymmetric LD (ALD)",
         textOutput("text_rawdata1"),
         textOutput("text_rawdata2"),
         tags$head(tags$style("#text_rawdata2{color: red;}") ),
-       #tags$img(src="ALD.png", width="50%"),
+        textOutput("text_fileinput"),
+        tags$head(tags$style("#text_fileinput{color: red;}") ),
+        #tags$img(src="ALD.png", width="50%"),
         tags$hr(),
         plotOutput('heatmap')
       )
@@ -46,7 +48,8 @@ shinyUI(navbarPage("Asymmetric LD (ALD)",
       sidebarPanel(
         tags$h4("Allele Specific Homozygosity"),
         uiOutput('choose_locus_pair'), #input$ var: selected_pair
-        uiOutput('choose_locus')       #input$ var: selected_locus
+        uiOutput('choose_locus'),      #input$ var: selected_locus
+        tags$h5("The focal locus defines the locus/allele conditioned upon")
       ),
       mainPanel(
         tags$head(
