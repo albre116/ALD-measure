@@ -341,10 +341,18 @@ getMin = function(loc){
     #all good
   })
 }
-  output$maxVal_f <- renderText({ paste(getMax(calcTable()$allele.freq))})
-  output$minVal_f <- renderText({ paste(getMin(calcTable()$allele.freq))})
-  output$maxVal_h <- renderText({ paste(getMax(calcTable()$as.homz))})
-  output$minVal_h <- renderText({ paste(getMin(calcTable()$as.homz))})
+#  output$maxVal_f <- renderText({ paste(getMax(calcTable()$allele.freq))})
+#  output$minVal_f <- renderText({ paste(getMin(calcTable()$allele.freq))})
+#  output$maxVal_h <- renderText({ paste(getMax(calcTable()$as.homz))})
+#  output$minVal_h <- renderText({ paste(getMin(calcTable()$as.homz))})
+#NB: above commented since AShomz coloring did not work w/ A~C~B~DRB1~DQB1_BroadRace-CAU.csv
+
+maxFreq <<- 0
+output$maxVal_f <- renderText({ paste(max(calcTable()$allele.freq))})
+output$minVal_f <- renderText({ paste(min(calcTable()$allele.freq))})
+output$maxVal_h <- renderText({ paste(max(calcTable()$as.homz))})
+output$minVal_h <- renderText({ paste(min(calcTable()$as.homz))})
+
 
 ########################################################################################################################
 
