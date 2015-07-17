@@ -45,7 +45,7 @@ window.setInterval(function() {
 //See lines ~247-251 for the location of these values.
 var maxFreq = parseFloat(d3.select('#maxVal_f').text())
 var minFreq = parseFloat(d3.select('#minVal_f').text())
-freqColorRange = [minFreq, maxFreq]
+freqColorRange = [0, maxFreq]
 //modify the domain of the frequency color scale from earlier with these newly
 //obtained max and min values
 freqScale.domain(domainGen(freqColorRange))
@@ -53,7 +53,7 @@ freqScale.domain(domainGen(freqColorRange))
 //Now we repeat this with the homz values
 var maxHomz = parseFloat(d3.select('#maxVal_h').text())
 var minHomz = parseFloat(d3.select('#minVal_h').text())
-homzColorRange = [minHomz, maxHomz]
+homzColorRange = [0, 1]
 homzScale.domain(domainGen(homzColorRange))
 
 //Now we use d3 to select all ('selectAll') of the frequency values by
@@ -356,9 +356,9 @@ getMin = function(loc){
 
 maxFreq <<- 0
 output$maxVal_f <- renderText({ paste(max(calcTable()$allele.freq))})
-output$minVal_f <- renderText({ paste(min(calcTable()$allele.freq))})
-output$maxVal_h <- renderText({ paste(max(calcTable()$as.homz))})
-output$minVal_h <- renderText({ paste(min(calcTable()$as.homz))})
+output$minVal_f <- renderText({ paste(0) }) #renderText({ paste(min(calcTable()$allele.freq))})
+output$maxVal_h <- renderText({ paste(1) }) #renderText({ paste(max(calcTable()$as.homz))})
+output$minVal_h <- renderText({ paste(0) }) #renderText({ paste(min(calcTable()$as.homz))})
 
 
 ########################################################################################################################
