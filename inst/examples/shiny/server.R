@@ -282,9 +282,10 @@ shinyServer(function(input, output, session) {
 #Calculate the table inside of a reactive function.
   calcTable <- reactive({
     data <- dataInput2()
-    if (is.null(data))
+    if (is.null(data)){
+      print("There is no data here (line 287).")
       return(NULL)
-    else {
+    } else {
       data.type2 <- TRUE
       names.type2 <- c("locus1", "locus2", "allele1", "allele2", "haplo.freq")
       check.names <- names.type2 %in% names(data)
@@ -314,10 +315,13 @@ shinyServer(function(input, output, session) {
     #Run the table function inside of the renderDataTable
     #Wrapped it in a try catch because it was spilling out an error about undefined columns before finishing.
     tryCatch({
+      print("The renderDataTable func ran perfectly! (line 318)")
       calcTable()
     }, warning = function(w) {
+        print("there was an error in the renderDataTable func (line 320)")
       #nothing
     }, error = function(e) {
+        print("there was an error in the renderDataTable func (line 320)")
       #nothing
     }, finally = {
       #all good
