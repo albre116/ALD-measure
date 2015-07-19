@@ -280,6 +280,9 @@ shinyServer(function(input, output, session) {
 ########################################################################################################################
 # asf table
 #Calculate the table inside of a reactive function.
+
+maxAllele = 1 #Let's set this variable outside the function so it is there to be updated
+              #when the function runs.
   calcTable <- reactive({
     data <- dataInput2()
     if (is.null(data)){
@@ -306,7 +309,8 @@ shinyServer(function(input, output, session) {
         bi.data$locus2 <- as.character(bi.data$locus2)
         table <- compute.AShomz(bi.data, sort.var=c("focal","allele.freq"), sort.asc=c(F,F), tolerance=input$tol)
       }
-      print("I HAVE RUN!")
+      print("Calc was run. (Line 312)")
+      maxAllele = getMax(table[table$focal==input$selected_locus,])
       table[table$focal==input$selected_locus,]
     }
   })
@@ -315,8 +319,8 @@ shinyServer(function(input, output, session) {
     #Run the table function inside of the renderDataTable
     #Wrapped it in a try catch because it was spilling out an error about undefined columns before finishing.
     tryCatch({
-      print("The renderDataTable func ran perfectly! (line 318)")
       calcTable()
+      print("The renderDataTable func ran perfectly! (line 318)")
     }, warning = function(w) {
         print("there was an error in the renderDataTable func (line 320)")
       #nothing
@@ -365,7 +369,14 @@ getMin = function(loc){
 # maxFreq <- getMax(calcTable()$allele.freq)
 # print("THE MAX FREQ IS!")
 # print(maxFreq)
-output$maxVal_f <- renderText({ paste(getMax(calcTable()$allele.freq))})
+# output$maxVal_f <- renderText({ paste(getMax(calcTable()$allele.freq))})
+# printing = reactive({
+#     print("The max allele is")
+#     print(maxAllele)
+#     })
+# printing()
+
+output$maxVal_f <- renderText({ paste(maxAllele)})
 output$minVal_f <- renderText({ paste(0) }) #renderText({ paste(min(calcTable()$allele.freq))})
 output$maxVal_h <- renderText({ paste(1) }) #renderText({ paste(max(calcTable()$as.homz))})
 output$minVal_h <- renderText({ paste(0) }) #renderText({ paste(min(calcTable()$as.homz))})
