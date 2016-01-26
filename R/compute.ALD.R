@@ -9,7 +9,7 @@
 #'            \code{locus1} \tab A character vector indentifying the first locus.\cr
 #'            \code{locus2} \tab A character vector indentifying the second locus.\cr
 #'            \code{allele1} \tab A character vector indentifying the allele at locus 1.\cr
-#'            \code{allele2} \tab A character vector indentifying the allele at locus 1.\cr
+#'            \code{allele2} \tab A character vector indentifying the allele at locus 2.\cr
 #'            }
 #' @param tolerance A threshold for the sum of the haplotype frequencies.
 #'    If the sum of the haplotype frequencies is greater than 1+tolerance or less
