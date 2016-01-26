@@ -13,7 +13,7 @@ compute.ALD(dat, tolerance = 0.01)
       \code{locus1} \tab A character vector indentifying the first locus.\cr
       \code{locus2} \tab A character vector indentifying the second locus.\cr
       \code{allele1} \tab A character vector indentifying the allele at locus 1.\cr
-      \code{allele2} \tab A character vector indentifying the allele at locus 1.\cr
+      \code{allele2} \tab A character vector indentifying the allele at locus 2.\cr
       }}
 
 \item{tolerance}{A threshold for the sum of the haplotype frequencies.
@@ -35,13 +35,15 @@ The return value is a dataframe with the following components:
  *Overall weighted haplotype-specific homozygosity for the first locus given the second locus.
 }
 \description{
-A function to compute asymmetric Linkage Disequilibrium measures (ALD) for polymorphic genetic data. These measures are identical to the correlation measure (r) for bi-allelic data.
+A function to compute asymmetric Linkage Disequilibrium measures (ALD) for polymorphic genetic 
+data. These measures are identical to the correlation measure (r) for bi-allelic data.
 }
 \section{Details}{
 
 A warning message is given if the sum of the haplotype frequencies is greater than 1.01 or less
-than 0.99 (regardless of the \code{tolerance} setting). The haplotype frequencies that are passed to the function are normalized within
-the function to sum to 1.0 by dividing each frequency by the sum of the passed frequencies.
+than 0.99 (regardless of the \code{tolerance} setting). The haplotype frequencies that are passed
+to the function are normalized within the function to sum to 1.0 by dividing each frequency by 
+the sum of the passed frequencies.
 }
 \examples{
 \dontrun{
@@ -53,7 +55,8 @@ hla.a_b <- hla.freqs[hla.freqs$locus1=="A" & hla.freqs$locus2=="B",]
 compute.ALD(hla.a_b)
 hla.freqs$locus <- paste(hla.freqs$locus1, hla.freqs$locus2, sep="-")
 compute.ALD(hla.freqs[hla.freqs$locus=="C-B",])
-#Note: additonal columns on the input dataframe (e.g., "locus" above) are allowed, but ignored by the function.
+#Note: additonal columns on the input dataframe (e.g., "locus" above) are allowed, but ignored 
+#by the function.
 
 # An example using genotype data from the haplo.stats package
 require(haplo.stats)
