@@ -10,11 +10,14 @@ lsort(dat, by = 1:dim(dat)[2], asc = rep(TRUE, length(by)),
 \arguments{
 \item{dat}{a dataframe or a matrix ("dimnames" are used as the variable names for a matrix)}
 
-\item{by}{a vector or a list of variable names or column indices specifying the "sort by" variables, the default is to sort by all variables in the order they appear in the data set.}
+\item{by}{a vector or a list of variable names or column indices specifying the "sort by"
+variables, the default is to sort by all variables in the order they appear in the data set.}
 
-\item{asc}{a vector with the same length as "by" indicating whether the sorting of each "by" variable is in ascending order, the default order is ascending.}
+\item{asc}{a vector with the same length as "by" indicating whether the sorting of each "by"
+variable is in ascending order, the default order is ascending.}
 
-\item{na.last}{a flag indicating whether missing values are placed as the last}
+\item{na.last}{a flag indicating whether missing values are placed as the last
+  elements in the data set, the default is TRUE}
 }
 \value{
 The return value is a sorted dataframe.
@@ -24,7 +27,8 @@ A function to sort a data.frame on specific columns.
 }
 \section{Details}{
 
-The input dataframe is not modified. The code is adapted from code posted to an old s-news listserve.
+The input dataframe is not modified. The code is adapted from code posted to an old s-news
+listserve.
 }
 \examples{
 \dontrun{
