@@ -29,7 +29,7 @@ Parameter **dat** is a data.frame with 5 required variables:
   - *locus1* A character vector indentifying the first locus.
   - *locus2* A character vector indentifying the second locus.
   - *allele1* A character vector indentifying the allele at locus 1.
-  - *allele2* A character vector indentifying the allele at locus 1.
+  - *allele2* A character vector indentifying the allele at locus 2.
 
 Parameter **tolerance** is a threshold for the sum of the haplotype frequencies. If the sum of the haplotype frequencies is greater than 1+tolerance or less than 1-tolerance an error is returned.
 
@@ -39,7 +39,7 @@ The function returns a dataframe (in the above example **ald.results**) with the
 - *locus2*	The name of the second locus.
 - *F.1*	Homozygosity (expected under HWP) for locus 1.
 - *F.1.2*	Conditional homozygosity for locus1 given locus2.
-- *F.2*	Homozygosity (expected under HWP) for locus 1.
+- *F.2*	Homozygosity (expected under HWP) for locus 2.
 - *F.2.1*	Conditional homozygosity for locus2 given locus1.
 - *ALD.1.2*	Asymmetric LD for locus1 given locus2.
 - *ALD.2.1*	Asymmetric LD for locus2 given locus1.
