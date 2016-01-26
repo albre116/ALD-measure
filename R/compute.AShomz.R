@@ -14,10 +14,13 @@
 #'            \code{allele2} \tab A character vector indentifying the allele at locus 1.\cr
 #'            }
 #' @param tolerance	A threshold for the sum of the haplotype frequencies.
-#'    If the sum of the haplotype frequencies is greater than 1+tolerance or less
-#'    than 1-tolerance an error is returned. The default is 0.01.
-#' @param sort.var	a vector of variable names specifying the "sort by" variables. The default is c("focal","allele").
-#' @param sort.asc	a vector of TRUE/FALSE values, with the same length as "sort.var", indicating whether sorting of each variable is in ascending order. The default order is ascending.
+#'   If the sum of the haplotype frequencies is greater than 1+tolerance or less
+#'   than 1-tolerance an error is returned. The default is 0.01.
+#' @param sort.var	a vector of variable names specifying the "sort by" variables. 
+#'                      The default is c("focal","allele").
+#' @param sort.asc	a vector of TRUE/FALSE values, with the same length as "sort.var", 
+#'                      indicating whether sorting of each variable is in ascending order. 
+#'                      The default order is ascending.
 #'
 #' @return The return value is a dataframe with the following components:
 #'  \tabular{ll}{
@@ -30,8 +33,9 @@
 #'
 #' @section Details:
 #' A warning message is given if the sum of the haplotype frequencies is greater than 1.01 or less
-#' than 0.99 (regardless of the \code{tolerance} setting). The haplotype frequencies that are passed to the function are normalized within
-#' the function to sum to 1.0 by dividing each frequency by the sum of the passed frequencies.
+#' than 0.99 (regardless of the \code{tolerance} setting). The haplotype frequencies that are 
+#' passed to the function are normalized within the function to sum to 1.0 by dividing each 
+#' frequency by the sum of the passed frequencies.
 #'
 #' @examples
 #' \dontrun{
@@ -52,7 +56,8 @@
 #' }
 #' @export
 
-compute.AShomz <- function(dat, tolerance=.01, sort.var=c("focal","allele"), sort.asc=rep(TRUE, length(sort.var))) {
+compute.AShomz <- function(dat, tolerance=.01, sort.var=c("focal","allele"), 
+  sort.asc=rep(TRUE, length(sort.var))) {
   names.req <- c("locus1", "locus2", "allele1", "allele2", "haplo.freq")
   check.names <- names.req %in% names(dat)
   if (sum(!check.names) > 0)
