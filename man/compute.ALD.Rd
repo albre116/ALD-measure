@@ -27,7 +27,7 @@ The return value is a dataframe with the following components:
  \code{locus2}	\tab The name of the second locus.\cr
  \code{F.1}	\tab Homozygosity (expected under HWP) for locus 1.\cr
  \code{F.1.2}	\tab Conditional homozygosity* for locus1 given locus2.\cr
- \code{F.2}	\tab Homozygosity (expected under HWP) for locus 1.\cr
+ \code{F.2}	\tab Homozygosity (expected under HWP) for locus 2.\cr
  \code{F.2.1}	\tab Conditional homozygosity* for locus2 given locus1.\cr
  \code{ALD.1.2} \tab Asymmetric LD for locus1 given locus2.\cr
  \code{ALD.2.1} \tab  Asymmetric LD for locus2 given locus1.\cr
