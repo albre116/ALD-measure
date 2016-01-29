@@ -1,3 +1,6 @@
+---
+output: pdf_document
+---
 ## Asymmetric Linkage Disequilibrium (ALD) for polymorphic genetic data
 
 **asymLD** package for R computes asymmetric LD measures (ALD) for polymorphic genetic data. These measures are identical to the correlation measure (r) for bi-allelic data. We first described the ALD measure in the following article:
