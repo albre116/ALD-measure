@@ -1,7 +1,6 @@
 Package: asymLD
 Type: Package
-Title: asymmetric Linkage Disequilibrium (ALD) for polymorphic genetic
-        data
+Title: asymmetric Linkage Disequilibrium (ALD) for polymorphic genetic data
 Version: 0.1
 Date: 2015-03-13
 Author: Richard M. Single
