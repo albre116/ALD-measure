@@ -13,7 +13,7 @@ compute.ALD(dat, tolerance = 0.01)
       \code{locus1} \tab A character vector indentifying the first locus.\cr
       \code{locus2} \tab A character vector indentifying the second locus.\cr
       \code{allele1} \tab A character vector indentifying the allele at locus 1.\cr
-      \code{allele2} \tab A character vector indentifying the allele at locus 1.\cr
+      \code{allele2} \tab A character vector indentifying the allele at locus 2.\cr
       }}
 
 \item{tolerance}{A threshold for the sum of the haplotype frequencies.
@@ -46,7 +46,6 @@ to the function are normalized within the function to sum to 1.0 by dividing eac
 the sum of the passed frequencies.
 }
 \examples{
-\dontrun{
 library(asymLD)
 
 # An example using haplotype frequencies from Wilson(2010)
@@ -55,8 +54,8 @@ hla.a_b <- hla.freqs[hla.freqs$locus1=="A" & hla.freqs$locus2=="B",]
 compute.ALD(hla.a_b)
 hla.freqs$locus <- paste(hla.freqs$locus1, hla.freqs$locus2, sep="-")
 compute.ALD(hla.freqs[hla.freqs$locus=="C-B",])
-#Note: additonal columns on the input dataframe (e.g., "locus" above) are allowed, but ignored by
-the function.
+# Note: additonal columns on the input dataframe (e.g., "locus" above) are allowed, but
+# ignored by the function.
 
 # An example using genotype data from the haplo.stats package
 require(haplo.stats)
@@ -80,7 +79,7 @@ compute.ALD(hapfreqs.df)
 # that the overall variation for DPA1 is relatively low given specific DPB1 alleles
 
 # An example using SNP data where results are symmetric and equal to the ordinary
-correlation measure (r)
+# correlation measure (r)
 data(snp.freqs)
 snps <- c("rs1548306", "rs6923504", "rs4434496", "rs7766854")
 compute.ALD(snp.freqs[snp.freqs$locus1==snps[2] & snp.freqs$locus2==snps[3],])
@@ -88,8 +87,8 @@ compute.ALD(snp.freqs[snp.freqs$locus1==snps[2] & snp.freqs$locus2==snps[3],])
 snp.freqs$locus <- paste(snp.freqs$locus1, snp.freqs$locus2, sep="-")
 by(snp.freqs,list(snp.freqs$locus),compute.ALD)
 
-# SNP1 & SNP2 : the r correlation & ALD measures are equivalent due to symmetry for bi-allelic
-SNPs
+# SNP1 & SNP2 : the r correlation & ALD measures are equivalent due to symmetry for
+# bi-allelic SNPs
 p.AB <- snp.freqs$haplo.freq[1]
 p.Ab <- snp.freqs$haplo.freq[2]
 p.aB <- snp.freqs$haplo.freq[3]
@@ -99,7 +98,5 @@ p.B <- p.AB + p.aB
 r.squared <- (p.AB - p.A*p.B)^2 / (p.A*(1-p.A)*p.B*(1-p.B))
 sqrt(r.squared) #the r correlation measure
 compute.ALD(snp.freqs[snp.freqs$locus1==snps[1] & snp.freqs$locus2==snps[2],])
-
-}
 }
 
