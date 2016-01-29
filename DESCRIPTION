@@ -7,6 +7,6 @@ Author: Richard M. Single
 Maintainer: Richard M. Single <rsingle@uvm.edu>
 Suggests: haplo.stats, fields
 LazyLoad: Yes
-Description: Computes asymmetric LD measures (ALD) for polymorphic genetic data. These measures are identical to the correlation measure (r) for bi-allelic data.
+Description: Computes asymmetric LD measures (ALD) for multi-allelic genetic data. These measures are identical to the correlation measure (r) for bi-allelic data.
 License: GPL-2
 Packaged: 2015-03-16 02:01:17 UTC; Rich
