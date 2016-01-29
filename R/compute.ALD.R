@@ -117,8 +117,8 @@ compute.ALD <- function(dat, tolerance = 0.01) {
   af2 <- aggregate(dat$haplo.freq, by = by.vars2, FUN = sum)
   names(af1)[length(names(af1))] <- "allele.freq1"
   names(af2)[length(names(af2))] <- "allele.freq2"
-  mrg1 <- merge(dat, af1, by.x = c("allele1"), by.y = c("allele1"), all.x = T, all.y = F)
-  mrg2 <- merge(mrg1, af2, by.x = c("allele2"), by.y = c("allele2"), all.x = T, all.y = F)
+  mrg1 <- merge(dat, af1, by.x = c("allele1"), by.y = c("allele1"), all.x = TRUE, all.y = FALSE)
+  mrg2 <- merge(mrg1, af2, by.x = c("allele2"), by.y = c("allele2"), all.x = TRUE, all.y = FALSE)
   dat <- mrg2
   
   F.1 <- 0

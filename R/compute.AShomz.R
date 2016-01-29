@@ -44,8 +44,8 @@
 #' data(hla.freqs)
 #' hla.dr_dq <- hla.freqs[hla.freqs$locus1=="DRB1" & hla.freqs$locus2=="DQB1",]
 #' compute.ALD(hla.dr_dq)
-#' compute.AShomz(hla.dr_dq, sort.var=c("focal","allele"), sort.asc=c(T,T))
-#' compute.AShomz(hla.dr_dq, sort.var=c("focal","allele.freq"), sort.asc=c(F,F))
+#' compute.AShomz(hla.dr_dq, sort.var=c("focal","allele"), sort.asc=c(TRUE,TRUE))
+#' compute.AShomz(hla.dr_dq, sort.var=c("focal","allele.freq"), sort.asc=c(FALSE,FALSE))
 #' # Note that there is substantially less variablity (higher ALD) for HLA*DQB1 
 #' # conditional on HLA*DRB1 than for HLA*DRB1 conditional on HLA*DQB1, indicating 
 #' # that the overall variation for DQB1 is relatively low given specific DRB1 alleles.
@@ -82,8 +82,8 @@ compute.AShomz <- function(dat, tolerance=.01, sort.var=c("focal","allele"),
   af2 <- aggregate(dat$haplo.freq, by=by.vars2, FUN=sum)
     names(af1)[length(names(af1))] <- "allele.freq1"
     names(af2)[length(names(af2))] <- "allele.freq2"
-  mrg1 <- merge(dat,  af1, by.x=c("allele1"), by.y=c("allele1"), all.x=T, all.y=F) 
-  mrg2 <- merge(mrg1, af2, by.x=c("allele2"), by.y=c("allele2"), all.x=T, all.y=F) 
+  mrg1 <- merge(dat,  af1, by.x=c("allele1"), by.y=c("allele1"), all.x=TRUE, all.y=FALSE) 
+  mrg2 <- merge(mrg1, af2, by.x=c("allele2"), by.y=c("allele2"), all.x=TRUE, all.y=FALSE) 
   dat <- mrg2  
   
   locus.name <- paste(locus1, locus2, sep="-") 
