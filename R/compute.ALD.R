@@ -89,6 +89,7 @@
 #' compute.ALD(snp.freqs[snp.freqs$locus1==snps[1] & snp.freqs$locus2==snps[2],])
 #' 
 #' @export
+#' @importFrom stats aggregate
 
 compute.ALD <- function(dat, tolerance = 0.01) {
   names.req <- c("locus1", "locus2", "allele1", "allele2", "haplo.freq")
